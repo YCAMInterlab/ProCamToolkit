@@ -3,6 +3,7 @@
 void testApp::setup() {
 	ofSetWindowPosition((ofGetScreenWidth() - ofGetWidth()) / 2, 0);
 	ofSetBackgroundAuto(false);
+	ofSetDataPathRoot("../../../../../SharedData/");
 	//ofSetVerticalSync(true);
 	scenes.push_back(new OrigScene());
 	scenes.push_back(new GridScene());

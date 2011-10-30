@@ -7,13 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		278158FF140F7855005468CC /* voronoi.frag in Sources */ = {isa = PBXBuildFile; fileRef = 278158FE140F7855005468CC /* voronoi.frag */; };
 		2787377D1427556C00049B8A /* BinnedParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2787376C1427556C00049B8A /* BinnedParticle.cpp */; };
 		2787377E1427556C00049B8A /* BinnedParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2787376E1427556C00049B8A /* BinnedParticleSystem.cpp */; };
 		2787377F1427556C00049B8A /* NoiseParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 278737761427556C00049B8A /* NoiseParticle.cpp */; };
-		27A14A751410CB5A004B6171 /* grid.frag in Sources */ = {isa = PBXBuildFile; fileRef = 27A14A741410CB5A004B6171 /* grid.frag */; };
-		27A14DA61410D844004B6171 /* lens.frag in Sources */ = {isa = PBXBuildFile; fileRef = 27A14DA51410D844004B6171 /* lens.frag */; };
-		27A14E671410FCC1004B6171 /* origami.frag in Sources */ = {isa = PBXBuildFile; fileRef = 27A14E661410FCC1004B6171 /* origami.frag */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworks.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -64,7 +60,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		278158FE140F7855005468CC /* voronoi.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = voronoi.frag; path = bin/data/shaders/voronoi.frag; sourceTree = SOURCE_ROOT; };
 		278737681427556C00049B8A /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/Scene.h; sourceTree = SOURCE_ROOT; };
 		2787376A1427556C00049B8A /* BallScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BallScene.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/scenes/BallScene.h; sourceTree = SOURCE_ROOT; };
 		2787376C1427556C00049B8A /* BinnedParticle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BinnedParticle.cpp; path = ../../../../../../../Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/scenes/BinnedParticle/BinnedParticle.cpp; sourceTree = SOURCE_ROOT; };
@@ -83,9 +78,6 @@
 		2787377A1427556C00049B8A /* VoroScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoroScene.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/scenes/VoroScene.h; sourceTree = SOURCE_ROOT; };
 		2787377B1427556C00049B8A /* WallScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WallScene.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/scenes/WallScene.h; sourceTree = SOURCE_ROOT; };
 		2787377C1427556C00049B8A /* WindScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindScene.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/scenes/WindScene.h; sourceTree = SOURCE_ROOT; };
-		27A14A741410CB5A004B6171 /* grid.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = grid.frag; sourceTree = "<group>"; };
-		27A14DA51410D844004B6171 /* lens.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = lens.frag; path = bin/data/shaders/lens.frag; sourceTree = SOURCE_ROOT; };
-		27A14E661410FCC1004B6171 /* origami.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = origami.frag; path = bin/data/shaders/origami.frag; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -134,27 +126,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		278158FC140F7855005468CC /* data */ = {
-			isa = PBXGroup;
-			children = (
-				278158FD140F7855005468CC /* shaders */,
-			);
-			name = data;
-			path = bin/data;
-			sourceTree = SOURCE_ROOT;
-		};
-		278158FD140F7855005468CC /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				27A14E661410FCC1004B6171 /* origami.frag */,
-				27A14DA51410D844004B6171 /* lens.frag */,
-				27A14A741410CB5A004B6171 /* grid.frag */,
-				278158FE140F7855005468CC /* voronoi.frag */,
-			);
-			name = shaders;
-			path = bin/data/shaders;
-			sourceTree = SOURCE_ROOT;
-		};
 		278737671427556C00049B8A /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,7 +234,6 @@
 			isa = PBXGroup;
 			children = (
 				278737671427556C00049B8A /* SharedCode */,
-				278158FC140F7855005468CC /* data */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
@@ -378,10 +348,6 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
-				278158FF140F7855005468CC /* voronoi.frag in Sources */,
-				27A14A751410CB5A004B6171 /* grid.frag in Sources */,
-				27A14DA61410D844004B6171 /* lens.frag in Sources */,
-				27A14E671410FCC1004B6171 /* origami.frag in Sources */,
 				2787377D1427556C00049B8A /* BinnedParticle.cpp in Sources */,
 				2787377E1427556C00049B8A /* BinnedParticleSystem.cpp in Sources */,
 				2787377F1427556C00049B8A /* NoiseParticle.cpp in Sources */,
