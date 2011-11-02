@@ -27,6 +27,10 @@ void testApp::setup() {
 	calibrationReady = false;
 	setupMesh();	
 	setupControlPanel();
+	launchpad.setup(1);
+	launchpad.setToggleMode(ofxLaunchpadToggle::MOMENTARY_MODE);
+	midiOut.openPort(0);
+	launchpad.addListener(this);
 }
 
 void testApp::update() {
@@ -123,25 +127,53 @@ void testApp::render() {
 	}
 	
 	objectMesh.clearColors();
-	if(getb("highlight")) {
+	if(getb("highlight") || getb("useLaunchpad")) {
+		vector<float> highlightPositions;
+		for(int y = 0; y < 8; y++) {
+			for(int x = 0; x < 8; x++) {
+				if(launchpad.getLedGrid(x, y).isOn()) {
+					float i = y * 8 + x;
+					float n = 8 * 8;
+					highlightPositions.push_back(i / n);
+				}
+			}
+		}
+		if(getb("highlight")) {
+			highlightPositions.push_back(getf("highlightPosition"));
+		}
 		int n = objectMesh.getNumVertices();
-		float highlightPosition = getf("highlightPosition");
 		float highlightOffset = getf("highlightOffset");
 		for(int i = 0; i < n; i++) {
-			int lower = ofMap(highlightPosition - highlightOffset, 0, 1, 0, n);
-			int upper = ofMap(highlightPosition + highlightOffset, 0, 1, 0, n);
-			ofColor cur = (lower < i && i < upper) ? ofColor::white : ofColor::black;
+			ofColor cur = ofColor::black;
+			for(int j = 0; j < highlightPositions.size(); j++) {
+				int lower = ofMap(highlightPositions[j] - highlightOffset, 0, 1, 0, n);
+				int upper = ofMap(highlightPositions[j] + highlightOffset, 0, 1, 0, n);
+				if(lower < i && i < upper) {
+					switch(upper % 4) {
+						case 0: cur = ofColor::white; break;
+						case 1: cur = cyanPrint; break;
+						case 2: cur = magentaPrint; break;
+						case 3: cur = yellowPrint; break; 
+					}
+					break;
+				}
+			}
 			objectMesh.addColor(cur);
 		}
 	}
 	
 	ofSetColor(255);
 	if(getb("drawModel")) {
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+		if(getb("cull")) {
+			glEnable(GL_CULL_FACE);
+		}
 		if(getb("drawWireframe")) {
 			objectMesh.drawWireframe();
 		} else {
 			objectMesh.drawFaces();
 		}
+		glPopAttrib();
 	}
 	if(useLights) {
 		ofDisableLighting();
@@ -169,12 +201,15 @@ void testApp::setupControlPanel() {
 	panel.msg = "tab hides the panel, space toggles render/selection mode.";
 	
 	panel.addPanel("Interaction");
+	panel.addToggle("setupMode", true);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addToggle("selectionMode", true);
 	panel.addToggle("drawModel", true);
 	panel.addToggle("drawWireframe", true);
 	panel.addToggle("useLights", false);
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
+	panel.addToggle("useLaunchpad", true);
+	panel.addDrawableRect("launchpad", &launchpad, 200, 200);
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
@@ -190,6 +225,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_ZERO_TANGENT_DIST", true);
 	
 	panel.addPanel("Rendering");
+	panel.addToggle("cull", true);
 	panel.addSlider("fogNear", 200, 0, 1000);
 	panel.addSlider("fogFar", 1850, 1000, 2500);
 	panel.addSlider("screenPointSize", 6, 1, 16, true);
@@ -332,46 +368,56 @@ void testApp::drawRenderMode() {
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	
-	// draw all reference points cyan
-	int n = referencePoints.size();
-	for(int i = 0; i < n; i++) {
-		if(referencePoints[i]) {
-			drawLabeledPoint(i, toOf(imagePoints[i]), cyanPrint);
+	if(getb("setupMode")) {
+		// draw all reference points cyan
+		int n = referencePoints.size();
+		for(int i = 0; i < n; i++) {
+			if(referencePoints[i]) {
+				drawLabeledPoint(i, toOf(imagePoints[i]), cyanPrint);
+			}
 		}
-	}
-	
-	// move points that need to be dragged
-	// draw selected yellow
-	int choice = geti("selectionChoice");
-	if(getb("selected")) {
-		referencePoints[choice] = true;	
-		Point2f& cur = imagePoints[choice];	
-		if(cur == Point2f()) {
-			if(calibrationReady) {
-				cur = toCv(ofVec2f(imageMesh.getVertex(choice)));
+		
+		// move points that need to be dragged
+		// draw selected yellow
+		int choice = geti("selectionChoice");
+		if(getb("selected")) {
+			referencePoints[choice] = true;	
+			Point2f& cur = imagePoints[choice];	
+			if(cur == Point2f()) {
+				if(calibrationReady) {
+					cur = toCv(ofVec2f(imageMesh.getVertex(choice)));
+				} else {
+					cur = Point2f(mouseX, mouseY);
+				}
+			}
+		}
+		if(getb("dragging")) {
+			Point2f& cur = imagePoints[choice];
+			float rate = ofGetMousePressed(0) ? getf("slowLerpRate") : getf("fastLerpRate");
+			cur = Point2f(ofLerp(cur.x, mouseX, rate), ofLerp(cur.y, mouseY, rate));
+			drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
+			ofSetColor(ofColor::black);
+			ofRect(toOf(cur), 1, 1);
+		} else {
+			// check to see if anything is selected
+			// draw hover magenta
+			float distance;
+			ofVec2f selected = toOf(getClosestPoint(imagePoints, mouseX, mouseY, &choice, &distance));
+			if(referencePoints[choice] && distance < getf("selectionRadius")) {
+				seti("hoverChoice", choice);
+				setb("hoverSelected", true);
+				drawLabeledPoint(choice, selected, magentaPrint);
 			} else {
-				cur = Point2f(mouseX, mouseY);
+				setb("hoverSelected", false);
 			}
 		}
 	}
-	if(getb("dragging")) {
-		Point2f& cur = imagePoints[choice];
-		float rate = ofGetMousePressed(0) ? getf("slowLerpRate") : getf("fastLerpRate");
-		cur = Point2f(ofLerp(cur.x, mouseX, rate), ofLerp(cur.y, mouseY, rate));
-		drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
-		ofSetColor(ofColor::black);
-		ofRect(toOf(cur), 1, 1);
-	} else {
-		// check to see if anything is selected
-		// draw hover magenta
-		float distance;
-		ofVec2f selected = toOf(getClosestPoint(imagePoints, mouseX, mouseY, &choice, &distance));
-		if(referencePoints[choice] && distance < getf("selectionRadius")) {
-			seti("hoverChoice", choice);
-			setb("hoverSelected", true);
-			drawLabeledPoint(choice, selected, magentaPrint);
-		} else {
-			setb("hoverSelected", false);
-		}
-	}
+}
+
+void testApp::gridButtonPressed(int col, int row) {
+	midiOut.sendNoteOn(1, row * 8 + col, 127);
+}
+
+void testApp::gridButtonReleased(int col, int row) {
+	midiOut.sendNoteOff(1, row * 8 + col, 0);
 }

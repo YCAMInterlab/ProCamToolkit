@@ -153,6 +153,13 @@
 		27E4EF7D143F2F55008D8085 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E4EF77143F2F55008D8085 /* tinyxmlerror.cpp */; };
 		27E4EF7E143F2F55008D8085 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E4EF78143F2F55008D8085 /* tinyxmlparser.cpp */; };
 		27E4EF7F143F2F55008D8085 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E4EF7A143F2F55008D8085 /* ofxXmlSettings.cpp */; };
+		27E5F845145D5CF700A41D96 /* ofxLaunchpad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E5F6A3145D5CF500A41D96 /* ofxLaunchpad.cpp */; };
+		27E5F846145D5CF700A41D96 /* ofxLaunchpadColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E5F6A5145D5CF500A41D96 /* ofxLaunchpadColor.cpp */; };
+		27E5F847145D5CF700A41D96 /* ofxLaunchpadToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E5F6A8145D5CF500A41D96 /* ofxLaunchpadToggle.cpp */; };
+		27E5F85E145D5CF700A41D96 /* RtMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E5F7BF145D5CF600A41D96 /* RtMidi.cpp */; };
+		27E5F85F145D5CF700A41D96 /* ofxMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E5F7C5145D5CF600A41D96 /* ofxMidiIn.cpp */; };
+		27E5F860145D5CF700A41D96 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E5F7C7145D5CF600A41D96 /* ofxMidiOut.cpp */; };
+		27E5F899145D5D2900A41D96 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E5F898145D5D2900A41D96 /* CoreMIDI.framework */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworks.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -471,6 +478,24 @@
 		27E4EF78143F2F55008D8085 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxXmlSettings/libs/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
 		27E4EF7A143F2F55008D8085 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxXmlSettings.cpp; path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxXmlSettings/src/ofxXmlSettings.cpp; sourceTree = SOURCE_ROOT; };
 		27E4EF7B143F2F55008D8085 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxXmlSettings.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxXmlSettings/src/ofxXmlSettings.h; sourceTree = SOURCE_ROOT; };
+		27E5F6A3145D5CF500A41D96 /* ofxLaunchpad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxLaunchpad.cpp; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpad.cpp; sourceTree = SOURCE_ROOT; };
+		27E5F6A4145D5CF500A41D96 /* ofxLaunchpad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxLaunchpad.h; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpad.h; sourceTree = SOURCE_ROOT; };
+		27E5F6A5145D5CF500A41D96 /* ofxLaunchpadColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxLaunchpadColor.cpp; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpadColor.cpp; sourceTree = SOURCE_ROOT; };
+		27E5F6A6145D5CF500A41D96 /* ofxLaunchpadColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxLaunchpadColor.h; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpadColor.h; sourceTree = SOURCE_ROOT; };
+		27E5F6A7145D5CF500A41D96 /* ofxLaunchpadListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxLaunchpadListener.h; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpadListener.h; sourceTree = SOURCE_ROOT; };
+		27E5F6A8145D5CF500A41D96 /* ofxLaunchpadToggle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxLaunchpadToggle.cpp; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpadToggle.cpp; sourceTree = SOURCE_ROOT; };
+		27E5F6A9145D5CF500A41D96 /* ofxLaunchpadToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxLaunchpadToggle.h; path = ../../../addons/ofxLaunchpad/src/ofxLaunchpadToggle.h; sourceTree = SOURCE_ROOT; };
+		27E5F7BE145D5CF600A41D96 /* RtError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RtError.h; path = ../../../addons/ofxMidi/libs/RtError.h; sourceTree = SOURCE_ROOT; };
+		27E5F7BF145D5CF600A41D96 /* RtMidi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RtMidi.cpp; path = ../../../addons/ofxMidi/libs/RtMidi.cpp; sourceTree = SOURCE_ROOT; };
+		27E5F7C0145D5CF600A41D96 /* RtMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RtMidi.h; path = ../../../addons/ofxMidi/libs/RtMidi.h; sourceTree = SOURCE_ROOT; };
+		27E5F7C2145D5CF600A41D96 /* ofxMidi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMidi.h; path = ../../../addons/ofxMidi/src/ofxMidi.h; sourceTree = SOURCE_ROOT; };
+		27E5F7C3145D5CF600A41D96 /* ofxMidiConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMidiConstants.h; path = ../../../addons/ofxMidi/src/ofxMidiConstants.h; sourceTree = SOURCE_ROOT; };
+		27E5F7C4145D5CF600A41D96 /* ofxMidiEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMidiEvents.h; path = ../../../addons/ofxMidi/src/ofxMidiEvents.h; sourceTree = SOURCE_ROOT; };
+		27E5F7C5145D5CF600A41D96 /* ofxMidiIn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxMidiIn.cpp; path = ../../../addons/ofxMidi/src/ofxMidiIn.cpp; sourceTree = SOURCE_ROOT; };
+		27E5F7C6145D5CF600A41D96 /* ofxMidiIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMidiIn.h; path = ../../../addons/ofxMidi/src/ofxMidiIn.h; sourceTree = SOURCE_ROOT; };
+		27E5F7C7145D5CF600A41D96 /* ofxMidiOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxMidiOut.cpp; path = ../../../addons/ofxMidi/src/ofxMidiOut.cpp; sourceTree = SOURCE_ROOT; };
+		27E5F7C8145D5CF600A41D96 /* ofxMidiOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMidiOut.h; path = ../../../addons/ofxMidi/src/ofxMidiOut.h; sourceTree = SOURCE_ROOT; };
+		27E5F898145D5D2900A41D96 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = /System/Library/Frameworks/CoreMIDI.framework; sourceTree = "<absolute>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -618,6 +643,7 @@
 				2705B4A4143D6E6600F2A09E /* libopencv_objdetect220.a in Frameworks */,
 				2705B4A5143D6E6600F2A09E /* libopencv_video220.a in Frameworks */,
 				2705B4A6143D6E6600F2A09E /* libzlib.a in Frameworks */,
+				27E5F899145D5D2900A41D96 /* CoreMIDI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1280,9 +1306,71 @@
 			path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxXmlSettings/src;
 			sourceTree = SOURCE_ROOT;
 		};
+		27E5F2BA145D5CEF00A41D96 /* ofxLaunchpad */ = {
+			isa = PBXGroup;
+			children = (
+				27E5F6A2145D5CF500A41D96 /* src */,
+			);
+			name = ofxLaunchpad;
+			path = ../../../addons/ofxLaunchpad;
+			sourceTree = SOURCE_ROOT;
+		};
+		27E5F6A2145D5CF500A41D96 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				27E5F6A3145D5CF500A41D96 /* ofxLaunchpad.cpp */,
+				27E5F6A4145D5CF500A41D96 /* ofxLaunchpad.h */,
+				27E5F6A5145D5CF500A41D96 /* ofxLaunchpadColor.cpp */,
+				27E5F6A6145D5CF500A41D96 /* ofxLaunchpadColor.h */,
+				27E5F6A7145D5CF500A41D96 /* ofxLaunchpadListener.h */,
+				27E5F6A8145D5CF500A41D96 /* ofxLaunchpadToggle.cpp */,
+				27E5F6A9145D5CF500A41D96 /* ofxLaunchpadToggle.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxLaunchpad/src;
+			sourceTree = SOURCE_ROOT;
+		};
+		27E5F6AA145D5CF500A41D96 /* ofxMidi */ = {
+			isa = PBXGroup;
+			children = (
+				27E5F7BD145D5CF600A41D96 /* libs */,
+				27E5F7C1145D5CF600A41D96 /* src */,
+			);
+			name = ofxMidi;
+			path = ../../../addons/ofxMidi;
+			sourceTree = SOURCE_ROOT;
+		};
+		27E5F7BD145D5CF600A41D96 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				27E5F7BE145D5CF600A41D96 /* RtError.h */,
+				27E5F7BF145D5CF600A41D96 /* RtMidi.cpp */,
+				27E5F7C0145D5CF600A41D96 /* RtMidi.h */,
+			);
+			name = libs;
+			path = ../../../addons/ofxMidi/libs;
+			sourceTree = SOURCE_ROOT;
+		};
+		27E5F7C1145D5CF600A41D96 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				27E5F7C2145D5CF600A41D96 /* ofxMidi.h */,
+				27E5F7C3145D5CF600A41D96 /* ofxMidiConstants.h */,
+				27E5F7C4145D5CF600A41D96 /* ofxMidiEvents.h */,
+				27E5F7C5145D5CF600A41D96 /* ofxMidiIn.cpp */,
+				27E5F7C6145D5CF600A41D96 /* ofxMidiIn.h */,
+				27E5F7C7145D5CF600A41D96 /* ofxMidiOut.cpp */,
+				27E5F7C8145D5CF600A41D96 /* ofxMidiOut.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxMidi/src;
+			sourceTree = SOURCE_ROOT;
+		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				27E5F2BA145D5CEF00A41D96 /* ofxLaunchpad */,
+				27E5F6AA145D5CF500A41D96 /* ofxMidi */,
 				27E4EF6C143F2F55008D8085 /* ofxDirList */,
 				27E4EF72143F2F55008D8085 /* ofxXmlSettings */,
 				27E4EF14143F2D00008D8085 /* ofxControlPanel */,
@@ -1307,6 +1395,7 @@
 				E45BE9770E8CC7DD009D7055 /* CoreServices.framework */,
 				E45BE9790E8CC7DD009D7055 /* OpenGL.framework */,
 				E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */,
+				27E5F898145D5D2900A41D96 /* CoreMIDI.framework */,
 			);
 			name = "system frameworks";
 			sourceTree = "<group>";
@@ -1495,6 +1584,12 @@
 				27E4EF7D143F2F55008D8085 /* tinyxmlerror.cpp in Sources */,
 				27E4EF7E143F2F55008D8085 /* tinyxmlparser.cpp in Sources */,
 				27E4EF7F143F2F55008D8085 /* ofxXmlSettings.cpp in Sources */,
+				27E5F845145D5CF700A41D96 /* ofxLaunchpad.cpp in Sources */,
+				27E5F846145D5CF700A41D96 /* ofxLaunchpadColor.cpp in Sources */,
+				27E5F847145D5CF700A41D96 /* ofxLaunchpadToggle.cpp in Sources */,
+				27E5F85E145D5CF700A41D96 /* RtMidi.cpp in Sources */,
+				27E5F85F145D5CF700A41D96 /* ofxMidiIn.cpp in Sources */,
+				27E5F860145D5CF700A41D96 /* ofxMidiOut.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

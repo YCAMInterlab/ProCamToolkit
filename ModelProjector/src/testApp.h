@@ -5,8 +5,9 @@
 #include "ofxAssimpModelLoader.h"
 #include "ofxProCamToolkit.h"
 #include "ofxAutoControlPanel.h"
+#include "ofxLaunchpadToggle.h"
 
-class testApp : public ofBaseApp {
+class testApp : public ofBaseApp, public ofxLaunchpadListener {
 public:
 	void setb(string name, bool value);
 	void seti(string name, int value);
@@ -45,4 +46,9 @@ public:
 	ofMatrix4x4 modelMatrix;
 	ofxCv::Intrinsics intrinsics;
 	bool calibrationReady;
+	
+	ofxLaunchpadToggle launchpad;
+	ofxMidiOut midiOut;
+	void gridButtonPressed(int col, int row);
+	void gridButtonReleased(int col, int row);
 };
