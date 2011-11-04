@@ -30,6 +30,10 @@ void testApp::setup() {
 }
 
 void testApp::update() {
+	if(getb("reloadShader")) {
+		shader.load("shader");
+		setb("reloadShader", false);
+	}
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
 		setf("lightY", ofSignedNoise(1, ofGetElapsedTimef(), 1) * 1000);
@@ -137,10 +141,26 @@ void testApp::render() {
 	
 	ofSetColor(255);
 	if(getb("drawModel")) {
+		if(getb("useShader")) {
+			ofFile fragFile("shader.frag"), vertFile("shader.vert");
+			Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
+			Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
+			if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
+				shader.load("shader");
+			}
+			lastFragTimestamp = fragTimestamp;
+			lastVertTimestamp = vertTimestamp;
+			
+			shader.begin();
+			shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+		}
 		if(getb("drawWireframe")) {
 			objectMesh.drawWireframe();
 		} else {
 			objectMesh.drawFaces();
+		}
+		if(getb("useShader")) {
+			shader.end();
 		}
 	}
 	if(useLights) {
@@ -174,6 +194,8 @@ void testApp::setupControlPanel() {
 	panel.addToggle("drawModel", true);
 	panel.addToggle("drawWireframe", true);
 	panel.addToggle("useLights", false);
+	panel.addToggle("useShader", true);
+	panel.addToggle("reloadShader", true);
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Highlight");
