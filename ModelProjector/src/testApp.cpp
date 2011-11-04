@@ -141,6 +141,10 @@ void testApp::render() {
 	
 	ofSetColor(255);
 	if(getb("drawModel")) {
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+		if(getb("cull")) {
+			glEnable(GL_CULL_FACE);
+		}
 		if(getb("useShader")) {
 			ofFile fragFile("shader.frag"), vertFile("shader.vert");
 			Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
@@ -162,6 +166,7 @@ void testApp::render() {
 		if(getb("useShader")) {
 			shader.end();
 		}
+		glPopAttrib();
 	}
 	if(useLights) {
 		ofDisableLighting();
@@ -212,6 +217,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_ZERO_TANGENT_DIST", true);
 	
 	panel.addPanel("Rendering");
+	panel.addToggle("cull", true);
 	panel.addSlider("fogNear", 200, 0, 1000);
 	panel.addSlider("fogFar", 1850, 1000, 2500);
 	panel.addSlider("screenPointSize", 6, 1, 16, true);
