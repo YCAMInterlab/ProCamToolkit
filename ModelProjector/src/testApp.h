@@ -46,9 +46,12 @@ public:
 	ofMatrix4x4 modelMatrix;
 	ofxCv::Intrinsics intrinsics;
 	bool calibrationReady;
-	
+
 	ofxLaunchpadToggle launchpad;
 	ofxMidiOut midiOut;
 	void gridButtonPressed(int col, int row);
 	void gridButtonReleased(int col, int row);
+	
+	Poco::Timestamp lastFragTimestamp, lastVertTimestamp;
+	ofShader shader;
 };
