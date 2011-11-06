@@ -3,11 +3,11 @@
 using namespace ofxCv;
 using namespace cv;
 
-void getRemapPoints(string filename, int width, int height, vector<Point2f>& camImagePoints, vector<Point2f>& proImagePoints, vector<unsigned char>& colors) {
+void getRemapPoints(string filename, int width, int height, vector<Point2f>& camImagePoints, vector<Point2f>& proImagePoints, vector<unsigned char>& colors, GrayCodeMode mode) {
 	Mat codex, codey, camMask;
 	Mat cam;
-	grayDecode(filename + "vertical/", codex, cam);
-	grayDecode(filename + "horizontal/", codey, cam);
+	grayDecode(filename + "vertical/", codex, cam, mode);
+	grayDecode(filename + "horizontal/", codey, cam, mode);
 	cv::threshold(cam, camMask, 0, 255, CV_THRESH_OTSU);
 	Mat remap = buildRemap(codex, codey, camMask, width, height);
 	for(int py = 0; py < height; py++) {
@@ -22,45 +22,81 @@ void getRemapPoints(string filename, int width, int height, vector<Point2f>& cam
 	}
 }
 
-void getProCamImages(string filename, Mat& pro, Mat& cam, int width, int height) {
+void getProCamImages(string filename, Mat& pro, Mat& cam, int width, int height, GrayCodeMode mode) {
+	ofLogVerbose() << "getProCamImages()";
 	Mat codex, codey, mask;
-	grayDecode(filename + "vertical/", codex, cam);
-	grayDecode(filename + "horizontal/", codey, cam);
+	grayDecode(filename + "vertical/", codex, cam, mode);
+	grayDecode(filename + "horizontal/", codey, cam, mode);
 	cv::threshold(cam, mask, 0, 255, CV_THRESH_OTSU);
 	Mat remap = buildRemap(codex, codey, mask, width, height);
 	// closing remap gives better results than closing pro
-	//Mat kernel(3, 3, CV_8U, cv::Scalar(1));
-	//morphologyEx(remap, remap, cv::MORPH_CLOSE, kernel);
+	Mat kernel(3, 3, CV_8U, cv::Scalar(1));
+	morphologyEx(remap, remap, cv::MORPH_CLOSE, kernel);
 	applyRemap(remap, cam, pro, width, height);
-	//medianBlur(pro, 5);
+	medianBlur(pro, 3);
 }
 
-void grayDecode(string path, Mat& binaryCoded, Mat& cam) {
-	ofDirectory dirNormal, dirInverse;
-	dirNormal.listDir(path + "normal/");
-	dirInverse.listDir(path + "inverse/");
-	// per-pixel threshold of each image
-	int n = dirNormal.size();
-	vector<Mat> thresholded(n);
+void grayDecode(string path, Mat& binaryCoded, Mat& cam, GrayCodeMode mode) {
+	ofLogVerbose() << "grayDecode()";
+	vector<Mat> thresholded;
 	Mat minMat, maxMat;
-	ofImage imageNormal, imageInverse;
-	for(int i = 0; i < n; i++) {
-		imageNormal.loadImage(dirNormal.getPath(i));
-		imageInverse.loadImage(dirInverse.getPath(i));
-		imageNormal.setImageType(OF_IMAGE_GRAYSCALE);
-		imageInverse.setImageType(OF_IMAGE_GRAYSCALE);
-		imitate(cam, imageNormal);
-		Mat curNormal = toCv(imageNormal);
-		Mat curInverse = toCv(imageInverse);
-		thresholded[i] = curNormal > curInverse;
-		if(i == 0) {
-			minMat = min(curNormal, curInverse);
-			maxMat = max(curNormal, curInverse);
-		} else {
-			min(minMat, curNormal, minMat);
-			min(minMat, curInverse, minMat);
-			max(maxMat, curNormal, maxMat);
-			max(maxMat, curInverse, maxMat);
+	int n;
+	if(mode == GRAYCODE_MODE_GRAY) {
+		ofDirectory dir;
+		dir.listDir(path);
+		n = dir.size();
+		thresholded.resize(n);
+		ofImage image;
+		/*
+		ofImage gray;
+		ofLogVerbose() << "loading gray";
+		gray.loadImage(path + "../0.jpg");
+		gray.setImageType(OF_IMAGE_GRAYSCALE);
+		Mat grayMat = toCv(gray);
+		*/
+		for(int i = 0; i < n; i++) {
+			ofLogVerbose() << "loading " << dir.getPath(i);
+			image.loadImage(dir.getPath(i));
+			image.setImageType(OF_IMAGE_GRAYSCALE);
+			Mat cur = toCv(image);
+			imitate(cam, image);
+			
+			//thresholded[i] = cur > grayMat;
+			cv::threshold(cur, thresholded[i], 0, 255, CV_THRESH_OTSU);
+			
+			if(i == 0) {
+				cur.copyTo(minMat);
+				cur.copyTo(maxMat);
+			} else {
+				cv::min(cur, minMat, minMat);
+				cv::max(cur, maxMat, maxMat);
+			}
+		}
+	} else {
+		ofDirectory dirNormal, dirInverse;
+		dirNormal.listDir(path + "normal/");
+		dirInverse.listDir(path + "inverse/");
+		n = dirNormal.size();
+		thresholded.resize(n);
+		ofImage imageNormal, imageInverse;
+		for(int i = 0; i < n; i++) {
+			imageNormal.loadImage(dirNormal.getPath(i));
+			imageInverse.loadImage(dirInverse.getPath(i));
+			imageNormal.setImageType(OF_IMAGE_GRAYSCALE);
+			imageInverse.setImageType(OF_IMAGE_GRAYSCALE);
+			imitate(cam, imageNormal);
+			Mat curNormal = toCv(imageNormal);
+			Mat curInverse = toCv(imageInverse);
+			thresholded[i] = curNormal > curInverse;
+			if(i == 0) {
+				minMat = min(curNormal, curInverse);
+				maxMat = max(curNormal, curInverse);
+			} else {
+				min(minMat, curNormal, minMat);
+				min(minMat, curInverse, minMat);
+				max(maxMat, curNormal, maxMat);
+				max(maxMat, curInverse, maxMat);
+			}
 		}
 	}
 	max(maxMat, cam, cam);
@@ -69,6 +105,7 @@ void grayDecode(string path, Mat& binaryCoded, Mat& cam) {
 }
 
 void thresholdedToBinary(vector<Mat>& thresholded, Mat& binaryCoded) {
+	ofLogVerbose() << "thresholdedToBinary()";
 	int rows = thresholded[0].rows;
 	int cols = thresholded[0].cols;
 	int n = thresholded.size();
@@ -178,6 +215,7 @@ vector<vector<Point3f> > buildObjectPoints(cv::Size patternSize, float squareSiz
 	return results;
 }
 
+// need to use undistorted camera matrix when calling undistort points?
 vector<Point3f> triangulatePositions(
 		vector<Point2f>& camImagePoints, Mat camMatrix, Mat camDistCoeffs,
 		vector<Point2f>& proImagePoints, Mat proMatrix, Mat proDistCoeffs,
@@ -451,4 +489,52 @@ ofVec3f getClosestPointOnMesh(const ofMesh& mesh, float x, float y, int* choice,
 		*distance = sqrtf(bestDistance);
 	}
 	return mesh.getVerticesPointer()[bestChoice];
+}
+
+int exportPlyVertices(ostream& ply, ofMesh& cloud) {
+	int total = 0;
+	int i = 0;
+	ofVec3f zero(0, 0, 0);
+	vector<ofFloatColor>& colors = cloud.getColors();
+	vector<ofVec3f>& surface = cloud.getVertices();
+	for(int i = 0; i < surface.size(); i++) {
+		if (surface[i] != zero) {
+			ply.write(reinterpret_cast<char*>(&(surface[i].x)), sizeof(float));
+			ply.write(reinterpret_cast<char*>(&(surface[i].y)), sizeof(float));
+			ply.write(reinterpret_cast<char*>(&(surface[i].z)), sizeof(float));
+			if(colors.size() > 0) {
+				unsigned char color[3] = {colors[i].r * 255, colors[i].g * 255, colors[i].b * 255};
+				ply.write((char*) color, sizeof(char) * 3);
+			}
+			total++;
+		}
+	}
+	return total;
+}
+
+void exportPlyCloud(string filename, ofMesh& cloud) {
+	ofstream ply;
+	ply.open(ofToDataPath(filename).c_str(), ios::out | ios::binary);
+	if (ply.is_open()) {
+		// create all the vertices
+		stringstream vertices(ios::in | ios::out | ios::binary);
+		int total = exportPlyVertices(vertices, cloud);
+		
+		// write the header
+		ply << "ply" << endl;
+		ply << "format binary_little_endian 1.0" << endl;
+		ply << "element vertex " << total << endl;
+		ply << "property float x" << endl;
+		ply << "property float y" << endl;
+		ply << "property float z" << endl;
+		if (cloud.getNumColors() > 0) {
+			ply << "property uchar red" << endl;
+			ply << "property uchar green" << endl;
+			ply << "property uchar blue" << endl;
+		}
+		ply << "end_header" << endl;
+		
+		// write all the vertices
+		ply << vertices.rdbuf();
+	}
 }
