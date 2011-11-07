@@ -194,6 +194,7 @@ void testApp::setupControlPanel() {
 	panel.msg = "tab hides the panel, space toggles render/selection mode.";
 	
 	panel.addPanel("Interaction");
+	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addToggle("selectionMode", true);
 	panel.addToggle("drawModel", true);
@@ -301,6 +302,8 @@ void testApp::drawLabeledPoint(int label, ofVec2f position, ofColor color, ofCol
 void testApp::drawSelectionMode() {
 	ofSetColor(255);
 	cam.begin();
+	float scale = getf("scale");
+	ofScale(scale, scale, scale);
 	enableFog(getf("fogNear"), getf("fogFar"));
 	render();
 	disableFog();
