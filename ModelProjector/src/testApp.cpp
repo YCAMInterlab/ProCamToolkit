@@ -194,6 +194,7 @@ void testApp::setupControlPanel() {
 	panel.msg = "tab hides the panel, space toggles render/selection mode.";
 	
 	panel.addPanel("Interaction");
+	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addToggle("selectionMode", true);
@@ -310,39 +311,41 @@ void testApp::drawSelectionMode() {
 	imageMesh = getProjectedMesh(objectMesh);	
 	cam.end();
 	
-	// draw all reference points cyan
-	int n = referencePoints.size();
-	for(int i = 0; i < n; i++) {
-		if(referencePoints[i]) {
-			drawLabeledPoint(i, imageMesh.getVertex(i), cyanPrint);
+	if(getb("setupMode")) {
+		// draw all reference points cyan
+		int n = referencePoints.size();
+		for(int i = 0; i < n; i++) {
+			if(referencePoints[i]) {
+				drawLabeledPoint(i, imageMesh.getVertex(i), cyanPrint);
+			}
 		}
+		
+		// check to see if anything is selected
+		// draw hover point magenta
+		int choice;
+		float distance;
+		ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
+		if(distance < getf("selectionRadius")) {
+			seti("hoverChoice", choice);
+			setb("hoverSelected", true);
+			drawLabeledPoint(choice, selected, magentaPrint);
+		} else {
+			setb("hoverSelected", false);
+		}
+		
+		// draw selected point yellow
+		if(getb("selected")) {
+			int choice = geti("selectionChoice");
+			ofVec2f selected = imageMesh.getVertex(choice);
+			drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
+		}
+		
+		// draw all points cyan small
+		glPointSize(geti("screenPointSize"));
+		glEnable(GL_POINT_SMOOTH);
+		ofSetColor(cyanPrint);
+		imageMesh.drawVertices();
 	}
-	
-	// check to see if anything is selected
-	// draw hover point magenta
-	int choice;
-	float distance;
-	ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
-	if(distance < getf("selectionRadius")) {
-		seti("hoverChoice", choice);
-		setb("hoverSelected", true);
-		drawLabeledPoint(choice, selected, magentaPrint);
-	} else {
-		setb("hoverSelected", false);
-	}
-	
-	// draw selected point yellow
-	if(getb("selected")) {
-		int choice = geti("selectionChoice");
-		ofVec2f selected = imageMesh.getVertex(choice);
-		drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
-	}
-	
-	// draw all points cyan small
-	glPointSize(geti("screenPointSize"));
-	glEnable(GL_POINT_SMOOTH);
-	ofSetColor(cyanPrint);
-	imageMesh.drawVertices();
 }
 
 void testApp::drawRenderMode() {
