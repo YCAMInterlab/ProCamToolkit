@@ -190,6 +190,7 @@
 		2760A42B146783A8005D564E /* background_segm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = background_segm.hpp; path = ../../../addons/ofxCv/libs/opencv/include/opencv2/video/background_segm.hpp; sourceTree = SOURCE_ROOT; };
 		2760A42C146783A8005D564E /* tracking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = tracking.hpp; path = ../../../addons/ofxCv/libs/opencv/include/opencv2/video/tracking.hpp; sourceTree = SOURCE_ROOT; };
 		2760A42F146783A8005D564E /* opencv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = opencv.a; path = ../../../addons/ofxCv/libs/opencv/lib/osx/opencv.a; sourceTree = SOURCE_ROOT; };
+		278BC755146AC08900BB415E /* LineArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineArt.h; path = ../SharedCode/LineArt.h; sourceTree = SOURCE_ROOT; };
 		27E4EF16143F2D00008D8085 /* guiBaseObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiBaseObject.cpp; path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxControlPanel/src/guiBaseObject.cpp; sourceTree = SOURCE_ROOT; };
 		27E4EF17143F2D00008D8085 /* guiBaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiBaseObject.h; path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxControlPanel/src/guiBaseObject.h; sourceTree = SOURCE_ROOT; };
 		27E4EF18143F2D00008D8085 /* guiCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = guiCallback.cpp; path = ../../../../../../../Users/kyle/Documents/openFrameworks/addons/ofxControlPanel/src/guiCallback.cpp; sourceTree = SOURCE_ROOT; };
@@ -332,6 +333,7 @@
 		27053021143F29C60067A76B /* SharedCode */ = {
 			isa = PBXGroup;
 			children = (
+				278BC755146AC08900BB415E /* LineArt.h */,
 				27053022143F29C60067A76B /* ofxProCamToolkit.cpp */,
 				27053023143F29C60067A76B /* ofxProCamToolkit.h */,
 			);

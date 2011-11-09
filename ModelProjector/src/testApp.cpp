@@ -140,34 +140,32 @@ void testApp::render() {
 	}
 	
 	ofSetColor(255);
-	if(getb("drawModel")) {
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
-		if(getb("cull")) {
-			glEnable(GL_CULL_FACE);
-		}
-		if(getb("useShader")) {
-			ofFile fragFile("shader.frag"), vertFile("shader.vert");
-			Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
-			Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
-			if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
-				shader.load("shader");
-			}
-			lastFragTimestamp = fragTimestamp;
-			lastVertTimestamp = vertTimestamp;
-			
-			shader.begin();
-			shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
-		}
-		if(getb("drawWireframe")) {
-			objectMesh.drawWireframe();
-		} else {
-			objectMesh.drawFaces();
-		}
-		if(getb("useShader")) {
-			shader.end();
-		}
-		glPopAttrib();
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	if(getb("cull")) {
+		glEnable(GL_CULL_FACE);
 	}
+	if(getb("useShader")) {
+		ofFile fragFile("shader.frag"), vertFile("shader.vert");
+		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
+		Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
+		if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
+			shader.load("shader");
+		}
+		lastFragTimestamp = fragTimestamp;
+		lastVertTimestamp = vertTimestamp;
+		
+		shader.begin();
+		shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+	}
+	if(getb("drawWireframe")) {
+		objectMesh.drawWireframe();
+	} else {
+		objectMesh.drawFaces();
+	}
+	if(getb("useShader")) {
+		shader.end();
+	}
+	glPopAttrib();
 	if(useLights) {
 		ofDisableLighting();
 	}
@@ -198,7 +196,6 @@ void testApp::setupControlPanel() {
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addToggle("selectionMode", true);
-	panel.addToggle("drawModel", true);
 	panel.addToggle("drawWireframe", true);
 	panel.addToggle("useLights", false);
 	panel.addToggle("useShader", true);
