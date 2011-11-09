@@ -339,7 +339,7 @@ void testApp::drawSelectionMode() {
 	disableFog();
 	imageMesh = getProjectedMesh(objectMesh);	
 	cam.end();
-	
+
 	// draw all reference points cyan
 	int n = referencePoints.size();
 	for(int i = 0; i < n; i++) {
