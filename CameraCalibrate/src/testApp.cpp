@@ -3,6 +3,8 @@
 using namespace ofxCv;
 using namespace cv;
 
+int curFrame = 0;
+
 void testApp::setup() {
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
@@ -40,6 +42,8 @@ void testApp::draw() {
 	calibration.draw3d();
 	cam.end();
 	
+	calibration.draw(curFrame);
+	
 	// draw info
 	stringstream intrinsics, distcoeffs;
 	intrinsics << "fov: " << toOf(calibration.getDistortedIntrinsics().getFov());
@@ -53,4 +57,11 @@ void testApp::draw() {
 }
 
 void testApp::keyPressed(int key) {
+	if(key == OF_KEY_DOWN) {
+		curFrame++;
+	}
+	if(key == OF_KEY_UP) {
+		curFrame--;
+	}
+	curFrame = ofClamp(curFrame, 0, calibration.size() - 1);
 }

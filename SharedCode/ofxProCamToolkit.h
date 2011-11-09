@@ -3,10 +3,12 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 
+enum GrayCodeMode {GRAYCODE_MODE_OPPOSITES, GRAYCODE_MODE_GRAY};
+
 // todo: add getRemapPoints + getProCamImages in one pass
-void getRemapPoints(string filename, int width, int height, vector<cv::Point2f>& camImagePoints, vector<cv::Point2f>& proImagePoints, vector<unsigned char>& colors);
-void getProCamImages(string path, cv::Mat& pro, cv::Mat& cam, int width, int height);
-void grayDecode(string path, cv::Mat& binaryCoded, cv::Mat& cam);
+void getRemapPoints(string filename, int width, int height, vector<cv::Point2f>& camImagePoints, vector<cv::Point2f>& proImagePoints, vector<unsigned char>& colors, GrayCodeMode mode);
+void getProCamImages(string path, cv::Mat& pro, cv::Mat& cam, int width, int height, GrayCodeMode mode);
+void grayDecode(string path, cv::Mat& binaryCoded, cv::Mat& cam, GrayCodeMode mode);
 
 void thresholdedToBinary(vector<cv::Mat>& thresholded, cv::Mat& binaryCoded);
 void grayToBinary(cv::Mat& binaryCoded, int n);
@@ -16,10 +18,10 @@ void applyRemap(cv::Mat& remap, cv::Mat& input, cv::Mat& output, int width, int 
 
 // you have to handle allocation
 template <class C, class P>
-void getProCamImages(string path, C& cam, P& pro, int width, int height) {
+void getProCamImages(string path, C& cam, P& pro, int width, int height, GrayCodeMode mode) {
 	cv::Mat camMat = toCv(cam);
 	cv::Mat proMat = toCv(pro);
-	getProCamImages(path, camMat, proMat, width, height);
+	getProCamImages(path, camMat, proMat, width, height, mode);
 }
 
 void drawChessboardCorners(cv::Size patternSize, const vector<cv::Point2f>& centers);
@@ -48,3 +50,5 @@ ofVec3f ofScreenToWorld(ofVec3f screen);
 ofMesh getProjectedMesh(const ofMesh& mesh);
 cv::Point2f getClosestPoint(const vector<cv::Point2f>& vertices, float x, float y, int* choice = NULL, float* distance = NULL);
 ofVec3f getClosestPointOnMesh(const ofMesh& mesh, float x, float y, int* choice = NULL, float* distance = NULL);
+
+void exportPlyCloud(string filename, ofMesh& cloud);

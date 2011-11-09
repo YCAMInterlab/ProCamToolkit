@@ -1,11 +1,15 @@
 uniform float elapsedTime;
 varying vec3 position, normal;
 
+const vec4 on = vec4(1.);
+const vec4 off = vec4(0., 0., 0., 1.);
+const float speed = 50.;
+const float scale = 50.;
+
 void main() {
-	if(mod(position.z + elapsedTime * 10., 20.) > 10. ||
-		mod(position.y + elapsedTime * 10., 20.) > 10.) {
-		gl_FragColor = vec4(1.);
+	if(mod((position.x + position.y + position.z) + (elapsedTime * speed), scale) > (scale / 2.)) {
+		gl_FragColor = on;
 	} else {
-		gl_FragColor = vec4(0., 0., 0., 1.);
+		gl_FragColor = off;
 	}
 }
