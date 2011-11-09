@@ -310,42 +310,40 @@ void testApp::drawSelectionMode() {
 	disableFog();
 	imageMesh = getProjectedMesh(objectMesh);	
 	cam.end();
-	
-	if(getb("setupMode")) {
-		// draw all reference points cyan
-		int n = referencePoints.size();
-		for(int i = 0; i < n; i++) {
-			if(referencePoints[i]) {
-				drawLabeledPoint(i, imageMesh.getVertex(i), cyanPrint);
-			}
+
+	// draw all reference points cyan
+	int n = referencePoints.size();
+	for(int i = 0; i < n; i++) {
+		if(referencePoints[i]) {
+			drawLabeledPoint(i, imageMesh.getVertex(i), cyanPrint);
 		}
-		
-		// check to see if anything is selected
-		// draw hover point magenta
-		int choice;
-		float distance;
-		ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
-		if(distance < getf("selectionRadius")) {
-			seti("hoverChoice", choice);
-			setb("hoverSelected", true);
-			drawLabeledPoint(choice, selected, magentaPrint);
-		} else {
-			setb("hoverSelected", false);
-		}
-		
-		// draw selected point yellow
-		if(getb("selected")) {
-			int choice = geti("selectionChoice");
-			ofVec2f selected = imageMesh.getVertex(choice);
-			drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
-		}
-		
-		// draw all points cyan small
-		glPointSize(geti("screenPointSize"));
-		glEnable(GL_POINT_SMOOTH);
-		ofSetColor(cyanPrint);
-		imageMesh.drawVertices();
 	}
+	
+	// check to see if anything is selected
+	// draw hover point magenta
+	int choice;
+	float distance;
+	ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
+	if(distance < getf("selectionRadius")) {
+		seti("hoverChoice", choice);
+		setb("hoverSelected", true);
+		drawLabeledPoint(choice, selected, magentaPrint);
+	} else {
+		setb("hoverSelected", false);
+	}
+	
+	// draw selected point yellow
+	if(getb("selected")) {
+		int choice = geti("selectionChoice");
+		ofVec2f selected = imageMesh.getVertex(choice);
+		drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
+	}
+	
+	// draw all points cyan small
+	glPointSize(geti("screenPointSize"));
+	glEnable(GL_POINT_SMOOTH);
+	ofSetColor(cyanPrint);
+	imageMesh.drawVertices();
 }
 
 void testApp::drawRenderMode() {
@@ -366,46 +364,48 @@ void testApp::drawRenderMode() {
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	
-	// draw all reference points cyan
-	int n = referencePoints.size();
-	for(int i = 0; i < n; i++) {
-		if(referencePoints[i]) {
-			drawLabeledPoint(i, toOf(imagePoints[i]), cyanPrint);
-		}
-	}
-	
-	// move points that need to be dragged
-	// draw selected yellow
-	int choice = geti("selectionChoice");
-	if(getb("selected")) {
-		referencePoints[choice] = true;	
-		Point2f& cur = imagePoints[choice];	
-		if(cur == Point2f()) {
-			if(calibrationReady) {
-				cur = toCv(ofVec2f(imageMesh.getVertex(choice)));
-			} else {
-				cur = Point2f(mouseX, mouseY);
+	if(getb("setupMode")) {
+		// draw all reference points cyan
+		int n = referencePoints.size();
+		for(int i = 0; i < n; i++) {
+			if(referencePoints[i]) {
+				drawLabeledPoint(i, toOf(imagePoints[i]), cyanPrint);
 			}
 		}
-	}
-	if(getb("dragging")) {
-		Point2f& cur = imagePoints[choice];
-		float rate = ofGetMousePressed(0) ? getf("slowLerpRate") : getf("fastLerpRate");
-		cur = Point2f(ofLerp(cur.x, mouseX, rate), ofLerp(cur.y, mouseY, rate));
-		drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
-		ofSetColor(ofColor::black);
-		ofRect(toOf(cur), 1, 1);
-	} else {
-		// check to see if anything is selected
-		// draw hover magenta
-		float distance;
-		ofVec2f selected = toOf(getClosestPoint(imagePoints, mouseX, mouseY, &choice, &distance));
-		if(referencePoints[choice] && distance < getf("selectionRadius")) {
-			seti("hoverChoice", choice);
-			setb("hoverSelected", true);
-			drawLabeledPoint(choice, selected, magentaPrint);
+		
+		// move points that need to be dragged
+		// draw selected yellow
+		int choice = geti("selectionChoice");
+		if(getb("selected")) {
+			referencePoints[choice] = true;	
+			Point2f& cur = imagePoints[choice];	
+			if(cur == Point2f()) {
+				if(calibrationReady) {
+					cur = toCv(ofVec2f(imageMesh.getVertex(choice)));
+				} else {
+					cur = Point2f(mouseX, mouseY);
+				}
+			}
+		}
+		if(getb("dragging")) {
+			Point2f& cur = imagePoints[choice];
+			float rate = ofGetMousePressed(0) ? getf("slowLerpRate") : getf("fastLerpRate");
+			cur = Point2f(ofLerp(cur.x, mouseX, rate), ofLerp(cur.y, mouseY, rate));
+			drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
+			ofSetColor(ofColor::black);
+			ofRect(toOf(cur), 1, 1);
 		} else {
-			setb("hoverSelected", false);
+			// check to see if anything is selected
+			// draw hover magenta
+			float distance;
+			ofVec2f selected = toOf(getClosestPoint(imagePoints, mouseX, mouseY, &choice, &distance));
+			if(referencePoints[choice] && distance < getf("selectionRadius")) {
+				seti("hoverChoice", choice);
+				setb("hoverSelected", true);
+				drawLabeledPoint(choice, selected, magentaPrint);
+			} else {
+				setb("hoverSelected", false);
+			}
 		}
 	}
 }
