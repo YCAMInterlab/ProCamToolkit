@@ -30,10 +30,6 @@ void testApp::setup() {
 }
 
 void testApp::update() {
-	if(getb("reloadShader")) {
-		shader.load("shader");
-		setb("reloadShader", false);
-	}
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
 		setf("lightY", ofSignedNoise(1, ofGetElapsedTimef(), 1) * 1000);
@@ -199,8 +195,6 @@ void testApp::setupControlPanel() {
 	panel.addToggle("drawWireframe", true);
 	panel.addToggle("useLights", false);
 	panel.addToggle("useShader", true);
-	panel.addToggle("reloadShader", true);
-	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
@@ -214,6 +208,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_K2", true);
 	panel.addToggle("CV_CALIB_FIX_K3", true);
 	panel.addToggle("CV_CALIB_ZERO_TANGENT_DIST", true);
+	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
 	panel.addToggle("cull", true);
