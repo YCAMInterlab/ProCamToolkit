@@ -6,6 +6,7 @@
 #include "ofxProCamToolkit.h"
 #include "ofxAutoControlPanel.h"
 #include "ofxLaunchpadToggle.h"
+#include "LineArt.h"
 
 class testApp : public ofBaseApp, public ofxLaunchpadListener {
 public:

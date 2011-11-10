@@ -34,10 +34,6 @@ void testApp::setup() {
 }
 
 void testApp::update() {
-	if(getb("reloadShader")) {
-		shader.load("shader");
-		setb("reloadShader", false);
-	}
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
 		setf("lightY", ofSignedNoise(1, ofGetElapsedTimef(), 1) * 1000);
@@ -67,15 +63,11 @@ void disableFog() {
 
 void testApp::draw() {
 	ofBackground(geti("backgroundColor"));
-	glEnable(GL_DEPTH_TEST);
-	
 	if(getb("selectionMode")) {
 		drawSelectionMode();
 	} else {
 		drawRenderMode();
 	}
-	
-	glDisable(GL_DEPTH_TEST);
 }
 
 void testApp::keyPressed(int key) {
@@ -123,11 +115,14 @@ void testApp::setupMesh() {
 }
 
 void testApp::render() {
-	bool useLights = getb("useLights");
+	int shading = geti("shading");
+	bool useLights = shading == 1;
+	bool useShader = shading == 2;
 	if(useLights) {
 		light.enable();
 		ofEnableLighting();
 		glShadeModel(GL_SMOOTH);
+		glEnable(GL_NORMALIZE);
 	}
 	
 	objectMesh.clearColors();
@@ -167,34 +162,44 @@ void testApp::render() {
 	}
 	
 	ofSetColor(255);
-	if(getb("drawModel")) {
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
-		if(getb("cull")) {
-			glEnable(GL_CULL_FACE);
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glEnable(GL_DEPTH_TEST);
+	if(useShader) {
+		ofFile fragFile("shader.frag"), vertFile("shader.vert");
+		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
+		Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
+		if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
+			shader.load("shader");
 		}
-		if(getb("useShader")) {
-			ofFile fragFile("shader.frag"), vertFile("shader.vert");
-			Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
-			Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
-			if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
-				shader.load("shader");
-			}
-			lastFragTimestamp = fragTimestamp;
-			lastVertTimestamp = vertTimestamp;
-			
-			shader.begin();
-			shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
-		}
-		if(getb("drawWireframe")) {
-			objectMesh.drawWireframe();
-		} else {
-			objectMesh.drawFaces();
-		}
-		if(getb("useShader")) {
-			shader.end();
-		}
-		glPopAttrib();
+		lastFragTimestamp = fragTimestamp;
+		lastVertTimestamp = vertTimestamp;
+		
+		shader.begin();
+		shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+		shader.end();
 	}
+	ofColor transparentBlack(0, 0, 0, 0);
+	switch(geti("drawMode")) {
+		case 0: // faces
+			if(useShader) shader.begin();
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+			objectMesh.drawFaces();
+			if(useShader) shader.end();
+			break;
+		case 1: // fullWireframe
+			if(useShader) shader.begin();
+			objectMesh.drawWireframe();
+			if(useShader) shader.end();
+			break;
+		case 2: // outlineWireframe
+			LineArt::draw(objectMesh, true, transparentBlack, useShader ? &shader : NULL);
+			break;
+		case 3: // occludedWireframe
+			LineArt::draw(objectMesh, false, transparentBlack, useShader ? &shader : NULL);
+			break;
+	}
+	glPopAttrib();
 	if(useLights) {
 		ofDisableLighting();
 	}
@@ -218,21 +223,14 @@ void testApp::saveData() {
 
 void testApp::setupControlPanel() {
 	panel.setup();
-	panel.msg = "tab hides the panel, space toggles render/selection mode.";
+	panel.msg = "tab hides the panel, space toggles render/selection mode, 'f' toggles fullscreen.";
 	
 	panel.addPanel("Interaction");
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
-	panel.addToggle("selectionMode", true);
-	panel.addToggle("drawModel", true);
-	panel.addToggle("drawWireframe", true);
-	panel.addToggle("useLights", false);
-	panel.addToggle("useShader", true);
-	panel.addToggle("reloadShader", true);
-	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
-	panel.addToggle("useLaunchpad", true);
-	panel.addDrawableRect("launchpad", &launchpad, 200, 200);
+	panel.addMultiToggle("drawMode", variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
+	panel.addMultiToggle("shading", variadic("none")("lights")("shader"));
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
@@ -246,20 +244,22 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_K2", true);
 	panel.addToggle("CV_CALIB_FIX_K3", true);
 	panel.addToggle("CV_CALIB_ZERO_TANGENT_DIST", true);
+	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
-	panel.addToggle("cull", true);
+	panel.addToggle("useFog", false);
 	panel.addSlider("fogNear", 200, 0, 1000);
-	panel.addSlider("fogFar", 1850, 1000, 2500);
+	panel.addSlider("fogFar", 1850, 0, 2500);
 	panel.addSlider("screenPointSize", 6, 1, 16, true);
 	panel.addSlider("selectedPointSize", 8, 1, 16, true);
 	panel.addSlider("selectionRadius", 12, 1, 32);
-	panel.addSlider("lightX", 0, -1000, 1000);
-	panel.addSlider("lightY", 0, -1000, 1000);
-	panel.addSlider("lightZ", 0, -1000, 1000);
-	panel.addToggle("randomLighting", true);
+	panel.addSlider("lightX", 200, -1000, 1000);
+	panel.addSlider("lightY", 400, -1000, 1000);
+	panel.addSlider("lightZ", 800, -1000, 1000);
+	panel.addToggle("randomLighting", false);
 	
 	panel.addPanel("Internal");
+	panel.addToggle("selectionMode", true);
 	panel.addToggle("hoverSelected", false);
 	panel.addSlider("hoverChoice", 0, 0, objectPoints.size(), true);
 	panel.addToggle("selected", false);
@@ -334,11 +334,21 @@ void testApp::drawSelectionMode() {
 	cam.begin();
 	float scale = getf("scale");
 	ofScale(scale, scale, scale);
-	enableFog(getf("fogNear"), getf("fogFar"));
+	if(getb("useFog")) {
+		enableFog(getf("fogNear"), getf("fogFar"));
+	}
 	render();
-	disableFog();
+	if(getb("useFog")) {
+		disableFog();
+	}
 	imageMesh = getProjectedMesh(objectMesh);	
 	cam.end();
+	
+	// draw all points cyan small
+	glPointSize(geti("screenPointSize"));
+	glEnable(GL_POINT_SMOOTH);
+	ofSetColor(cyanPrint);
+	imageMesh.drawVertices();
 
 	// draw all reference points cyan
 	int n = referencePoints.size();
@@ -367,12 +377,6 @@ void testApp::drawSelectionMode() {
 		ofVec2f selected = imageMesh.getVertex(choice);
 		drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
 	}
-	
-	// draw all points cyan small
-	glPointSize(geti("screenPointSize"));
-	glEnable(GL_POINT_SMOOTH);
-	ofSetColor(cyanPrint);
-	imageMesh.drawVertices();
 }
 
 void testApp::drawRenderMode() {
