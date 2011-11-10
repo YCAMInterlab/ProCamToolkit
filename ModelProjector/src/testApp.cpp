@@ -59,15 +59,11 @@ void disableFog() {
 
 void testApp::draw() {
 	ofBackground(geti("backgroundColor"));
-	glEnable(GL_DEPTH_TEST);
-	
 	if(getb("selectionMode")) {
 		drawSelectionMode();
 	} else {
 		drawRenderMode();
 	}
-	
-	glDisable(GL_DEPTH_TEST);
 }
 
 void testApp::keyPressed(int key) {
@@ -122,6 +118,7 @@ void testApp::render() {
 		light.enable();
 		ofEnableLighting();
 		glShadeModel(GL_SMOOTH);
+		glEnable(GL_NORMALIZE);
 	}
 	
 	objectMesh.clearColors();
@@ -139,6 +136,7 @@ void testApp::render() {
 	
 	ofSetColor(255);
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glEnable(GL_DEPTH_TEST);
 	if(useShader) {
 		ofFile fragFile("shader.frag"), vertFile("shader.vert");
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
@@ -228,10 +226,10 @@ void testApp::setupControlPanel() {
 	panel.addSlider("screenPointSize", 6, 1, 16, true);
 	panel.addSlider("selectedPointSize", 8, 1, 16, true);
 	panel.addSlider("selectionRadius", 12, 1, 32);
-	panel.addSlider("lightX", 0, -1000, 1000);
-	panel.addSlider("lightY", 0, -1000, 1000);
-	panel.addSlider("lightZ", 0, -1000, 1000);
-	panel.addToggle("randomLighting", true);
+	panel.addSlider("lightX", 200, -1000, 1000);
+	panel.addSlider("lightY", 400, -1000, 1000);
+	panel.addSlider("lightZ", 800, -1000, 1000);
+	panel.addToggle("randomLighting", false);
 	
 	panel.addPanel("Internal");
 	panel.addToggle("selectionMode", true);
@@ -318,6 +316,12 @@ void testApp::drawSelectionMode() {
 	}
 	imageMesh = getProjectedMesh(objectMesh);	
 	cam.end();
+	
+	// draw all points cyan small
+	glPointSize(geti("screenPointSize"));
+	glEnable(GL_POINT_SMOOTH);
+	ofSetColor(cyanPrint);
+	imageMesh.drawVertices();
 
 	// draw all reference points cyan
 	int n = referencePoints.size();
@@ -346,12 +350,6 @@ void testApp::drawSelectionMode() {
 		ofVec2f selected = imageMesh.getVertex(choice);
 		drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
 	}
-	
-	// draw all points cyan small
-	glPointSize(geti("screenPointSize"));
-	glEnable(GL_POINT_SMOOTH);
-	ofSetColor(cyanPrint);
-	imageMesh.drawVertices();
 }
 
 void testApp::drawRenderMode() {
