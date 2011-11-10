@@ -64,6 +64,20 @@ void testApp::draw() {
 	} else {
 		drawRenderMode();
 	}
+	if(!getb("validShader")) {
+		ofPushStyle();
+		ofSetColor(magentaPrint);
+		ofSetLineWidth(8);
+		ofLine(0, 0, ofGetWidth(), ofGetHeight());
+		ofLine(ofGetWidth(), 0, 0, ofGetHeight());
+		string message = "Shader failed to compile.";
+		ofVec2f center(ofGetWidth(), ofGetHeight());
+		center /= 2;
+		center.x -= message.size() * 8 / 2;
+		center.y -= 8;
+		drawHighlightString(message, center);
+		ofPopStyle();
+	}
 }
 
 void testApp::keyPressed(int key) {
@@ -148,7 +162,7 @@ void testApp::render() {
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
 		Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
 		if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
-			shader.load("shader");
+			setb("validShader", shader.load("shader"));
 		}
 		lastFragTimestamp = fragTimestamp;
 		lastVertTimestamp = vertTimestamp;
@@ -208,8 +222,8 @@ void testApp::setupControlPanel() {
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
-	panel.addMultiToggle("drawMode", variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
-	panel.addMultiToggle("shading", variadic("none")("lights")("shader"));
+	panel.addMultiToggle("drawMode", 3, variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
+	panel.addMultiToggle("shading", 0, variadic("none")("lights")("shader"));
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
@@ -240,6 +254,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("randomLighting", false);
 	
 	panel.addPanel("Internal");
+	panel.addToggle("validShader", true);
 	panel.addToggle("selectionMode", true);
 	panel.addToggle("hoverSelected", false);
 	panel.addSlider("hoverChoice", 0, 0, objectPoints.size(), true);
