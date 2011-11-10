@@ -111,6 +111,12 @@ void testApp::setupMesh() {
 }
 
 void testApp::render() {
+	ofSetLineWidth(geti("lineWidth"));
+	if(getb("useSmoothing")) {
+		ofEnableSmoothing();
+	} else {
+		ofDisableSmoothing();
+	}
 	int shading = geti("shading");
 	bool useLights = shading == 1;
 	bool useShader = shading == 2;
@@ -220,6 +226,8 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
+	panel.addSlider("lineWidth", 1, 1, 8, true);
+	panel.addToggle("useSmoothing", false);
 	panel.addToggle("useFog", false);
 	panel.addSlider("fogNear", 200, 0, 1000);
 	panel.addSlider("fogFar", 1850, 0, 2500);
