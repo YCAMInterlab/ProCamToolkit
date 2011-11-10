@@ -125,6 +125,7 @@ void testApp::setupMesh() {
 }
 
 void testApp::render() {
+	ofPushStyle();
 	ofSetLineWidth(geti("lineWidth"));
 	if(getb("useSmoothing")) {
 		ofEnableSmoothing();
@@ -162,7 +163,8 @@ void testApp::render() {
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
 		Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
 		if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
-			setb("validShader", shader.load("shader"));
+			bool validShader = shader.load("shader");
+			setb("validShader", validShader);
 		}
 		lastFragTimestamp = fragTimestamp;
 		lastVertTimestamp = vertTimestamp;
@@ -196,6 +198,7 @@ void testApp::render() {
 	if(useLights) {
 		ofDisableLighting();
 	}
+	ofPopStyle();
 }
 
 void testApp::saveData() {
@@ -240,12 +243,12 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
-	panel.addSlider("lineWidth", 1, 1, 8, true);
+	panel.addSlider("lineWidth", 2, 1, 8, true);
 	panel.addToggle("useSmoothing", false);
 	panel.addToggle("useFog", false);
 	panel.addSlider("fogNear", 200, 0, 1000);
 	panel.addSlider("fogFar", 1850, 0, 2500);
-	panel.addSlider("screenPointSize", 6, 1, 16, true);
+	panel.addSlider("screenPointSize", 2, 1, 16, true);
 	panel.addSlider("selectedPointSize", 8, 1, 16, true);
 	panel.addSlider("selectionRadius", 12, 1, 32);
 	panel.addSlider("lightX", 200, -1000, 1000);
@@ -359,7 +362,7 @@ void testApp::drawSelectionMode() {
 	int choice;
 	float distance;
 	ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
-	if(distance < getf("selectionRadius")) {
+	if(!ofGetMousePressed() && distance < getf("selectionRadius")) {
 		seti("hoverChoice", choice);
 		setb("hoverSelected", true);
 		drawLabeledPoint(choice, selected, magentaPrint);
@@ -428,7 +431,7 @@ void testApp::drawRenderMode() {
 			// draw hover magenta
 			float distance;
 			ofVec2f selected = toOf(getClosestPoint(imagePoints, mouseX, mouseY, &choice, &distance));
-			if(referencePoints[choice] && distance < getf("selectionRadius")) {
+			if(!ofGetMousePressed() && referencePoints[choice] && distance < getf("selectionRadius")) {
 				seti("hoverChoice", choice);
 				setb("hoverSelected", true);
 				drawLabeledPoint(choice, selected, magentaPrint);
