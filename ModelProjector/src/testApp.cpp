@@ -115,7 +115,9 @@ void testApp::setupMesh() {
 }
 
 void testApp::render() {
-	bool useLights = getb("useLights");
+	int shading = geti("shading");
+	bool useLights = shading == 1;
+	bool useShader = shading == 2;
 	if(useLights) {
 		light.enable();
 		ofEnableLighting();
@@ -137,7 +139,6 @@ void testApp::render() {
 	
 	ofSetColor(255);
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	bool useShader = getb("useShader");
 	if(useShader) {
 		ofFile fragFile("shader.frag"), vertFile("shader.vert");
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
@@ -156,6 +157,8 @@ void testApp::render() {
 	switch(geti("drawMode")) {
 		case 0: // faces
 			if(useShader) shader.begin();
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 			objectMesh.drawFaces();
 			if(useShader) shader.end();
 			break;
@@ -195,15 +198,14 @@ void testApp::saveData() {
 
 void testApp::setupControlPanel() {
 	panel.setup();
-	panel.msg = "tab hides the panel, space toggles render/selection mode.";
+	panel.msg = "tab hides the panel, space toggles render/selection mode, 'f' toggles fullscreen.";
 	
 	panel.addPanel("Interaction");
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addMultiToggle("drawMode", variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
-	panel.addToggle("useLights", false);
-	panel.addToggle("useShader", true);
+	panel.addMultiToggle("shading", variadic("none")("lights")("shader"));
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
@@ -220,8 +222,9 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
+	panel.addToggle("useFog", false);
 	panel.addSlider("fogNear", 200, 0, 1000);
-	panel.addSlider("fogFar", 1850, 1000, 2500);
+	panel.addSlider("fogFar", 1850, 0, 2500);
 	panel.addSlider("screenPointSize", 6, 1, 16, true);
 	panel.addSlider("selectedPointSize", 8, 1, 16, true);
 	panel.addSlider("selectionRadius", 12, 1, 32);
@@ -306,9 +309,13 @@ void testApp::drawSelectionMode() {
 	cam.begin();
 	float scale = getf("scale");
 	ofScale(scale, scale, scale);
-	enableFog(getf("fogNear"), getf("fogFar"));
+	if(getb("useFog")) {
+		enableFog(getf("fogNear"), getf("fogFar"));
+	}
 	render();
-	disableFog();
+	if(getb("useFog")) {
+		disableFog();
+	}
 	imageMesh = getProjectedMesh(objectMesh);	
 	cam.end();
 
