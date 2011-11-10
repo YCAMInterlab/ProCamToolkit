@@ -137,10 +137,8 @@ void testApp::render() {
 	
 	ofSetColor(255);
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	if(getb("cull")) {
-		glEnable(GL_CULL_FACE);
-	}
-	if(getb("useShader")) {
+	bool useShader = getb("useShader");
+	if(useShader) {
 		ofFile fragFile("shader.frag"), vertFile("shader.vert");
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
 		Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
@@ -152,14 +150,26 @@ void testApp::render() {
 		
 		shader.begin();
 		shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	}
-	if(getb("drawWireframe")) {
-		objectMesh.drawWireframe();
-	} else {
-		objectMesh.drawFaces();
-	}
-	if(getb("useShader")) {
 		shader.end();
+	}
+	ofColor transparentBlack(0, 0, 0, 0);
+	switch(geti("drawMode")) {
+		case 0: // wireframe
+			if(useShader) shader.begin();
+			objectMesh.drawWireframe();
+			if(useShader) shader.end();
+			break;
+		case 1: // faces
+			if(useShader) shader.begin();
+			objectMesh.drawFaces();
+			if(useShader) shader.end();
+			break;
+		case 2: // outline
+			LineArt::draw(objectMesh, true, transparentBlack, useShader ? &shader : NULL);
+			break;
+		case 3: // occludedWireframe
+			LineArt::draw(objectMesh, false, transparentBlack, useShader ? &shader : NULL);
+			break;
 	}
 	glPopAttrib();
 	if(useLights) {
@@ -191,8 +201,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
-	panel.addToggle("selectionMode", true);
-	panel.addToggle("drawWireframe", true);
+	panel.addMultiToggle("drawMode", variadic("wireframe")("faces")("outline")("occludedWireframe"));
 	panel.addToggle("useLights", false);
 	panel.addToggle("useShader", true);
 	
@@ -211,7 +220,6 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
-	panel.addToggle("cull", true);
 	panel.addSlider("fogNear", 200, 0, 1000);
 	panel.addSlider("fogFar", 1850, 1000, 2500);
 	panel.addSlider("screenPointSize", 6, 1, 16, true);
@@ -223,6 +231,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("randomLighting", true);
 	
 	panel.addPanel("Internal");
+	panel.addToggle("selectionMode", true);
 	panel.addToggle("hoverSelected", false);
 	panel.addSlider("hoverChoice", 0, 0, objectPoints.size(), true);
 	panel.addToggle("selected", false);

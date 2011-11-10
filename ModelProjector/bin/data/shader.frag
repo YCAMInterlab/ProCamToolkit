@@ -2,7 +2,7 @@ uniform float elapsedTime;
 varying vec3 position, normal;
 
 const vec4 on = vec4(1.);
-const vec4 off = vec4(0., 0., 0., 1.);
+const vec4 off = vec4(vec3(0.), 1.);
 const float speed = 50.;
 const float scale = 50.;
 

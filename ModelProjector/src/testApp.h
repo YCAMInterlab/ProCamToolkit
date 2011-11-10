@@ -5,6 +5,7 @@
 #include "ofxAssimpModelLoader.h"
 #include "ofxProCamToolkit.h"
 #include "ofxAutoControlPanel.h"
+#include "LineArt.h"
 
 class testApp : public ofBaseApp {
 public:
