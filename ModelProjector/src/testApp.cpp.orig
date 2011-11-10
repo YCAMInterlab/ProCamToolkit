@@ -229,9 +229,20 @@ void testApp::setupControlPanel() {
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
+<<<<<<< HEAD
+	panel.addToggle("selectionMode", true);
+	panel.addToggle("drawModel", true);
+	panel.addToggle("drawWireframe", true);
+	panel.addToggle("useLights", false);
+	panel.addToggle("useShader", true);
+	panel.addToggle("reloadShader", true);
+	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
+	panel.addToggle("useLaunchpad", true);
+	panel.addDrawableRect("launchpad", &launchpad, 200, 200);
+=======
 	panel.addMultiToggle("drawMode", variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
 	panel.addMultiToggle("shading", variadic("none")("lights")("shader"));
-	panel.addDrawableRect("launchpad", &launchpad, 200, 200);
+>>>>>>> master
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
