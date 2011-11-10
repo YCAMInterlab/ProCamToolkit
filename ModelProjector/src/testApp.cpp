@@ -154,17 +154,17 @@ void testApp::render() {
 	}
 	ofColor transparentBlack(0, 0, 0, 0);
 	switch(geti("drawMode")) {
-		case 0: // wireframe
-			if(useShader) shader.begin();
-			objectMesh.drawWireframe();
-			if(useShader) shader.end();
-			break;
-		case 1: // faces
+		case 0: // faces
 			if(useShader) shader.begin();
 			objectMesh.drawFaces();
 			if(useShader) shader.end();
 			break;
-		case 2: // outline
+		case 1: // fullWireframe
+			if(useShader) shader.begin();
+			objectMesh.drawWireframe();
+			if(useShader) shader.end();
+			break;
+		case 2: // outlineWireframe
 			LineArt::draw(objectMesh, true, transparentBlack, useShader ? &shader : NULL);
 			break;
 		case 3: // occludedWireframe
@@ -201,7 +201,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
-	panel.addMultiToggle("drawMode", variadic("wireframe")("faces")("outline")("occludedWireframe"));
+	panel.addMultiToggle("drawMode", variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
 	panel.addToggle("useLights", false);
 	panel.addToggle("useShader", true);
 	
