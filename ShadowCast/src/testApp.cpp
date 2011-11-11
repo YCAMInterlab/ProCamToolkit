@@ -13,6 +13,9 @@ ofVec3f ConvertProjectiveToRealWorld(ofVec3f projective) {
 								 projective.z);
 }
 
+using namespace ofxCv;
+using namespace cv;
+
 void testApp::setup(){
 	ofSetVerticalSync(true);
 	ofSetBackgroundAuto(false);
@@ -77,7 +80,7 @@ void testApp::setup(){
 	}
 	curScene = 0;
 	
-	ofxKinectCalibration::setClippingInCentimeters(100, 500);
+	kinect.setDepthClipping(1000, 5000);
 	kinect.init(false, false);
 	kinect.open();
 	

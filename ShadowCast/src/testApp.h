@@ -57,8 +57,8 @@ public:
 	int curScene;
 	
 	ofxKinect kinect;
-	Mat kinectAccumulator, kinectAccumulator8u;
-	ContourFinder contourFinder;
+	cv::Mat kinectAccumulator, kinectAccumulator8u;
+	ofxCv::ContourFinder contourFinder;
 	ofImage filled;
 	vector<ofVec3f> users;
 	vector<unsigned int> userLabels;
