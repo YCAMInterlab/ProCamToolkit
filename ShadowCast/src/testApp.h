@@ -60,7 +60,7 @@ public:
 	cv::Mat kinectAccumulator, kinectAccumulator8u;
 	ofxCv::ContourFinder contourFinder;
 	ofImage filled;
-	vector<ofVec3f> users;
+	vector<ofVec3f> users, usersBefore;
 	vector<unsigned int> userLabels;
 	
 	float startFadeTime;

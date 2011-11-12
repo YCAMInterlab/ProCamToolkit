@@ -10,7 +10,7 @@ const vec4 off = vec4(vec3(0.), 1.);
 
 void main() {
 	float stages = 6.;
-	float stage = mod(elapsedTime * .6, stages);
+	float stage = 5.;mod(elapsedTime * .6, stages);
 	if(stage < 1.) {
 		// diagonal stripes
 		const float speed = 50.;

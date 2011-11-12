@@ -19,6 +19,7 @@ using namespace cv;
 void testApp::setup(){
 	ofSetVerticalSync(true);
 	ofSetBackgroundAuto(false);
+	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	ofSetDataPathRoot("../../../../../SharedData/");
 	
 	panel.setup();
@@ -39,14 +40,16 @@ void testApp::setup(){
 	panel.addSlider("fade", 0, 0, 1); //
 	
 	panel.addPanel("Detection");
+	panel.addSlider("kinectNear", 500, 0, 2000);
+	panel.addSlider("kinectFar", 1500, 0, 2000);
 	panel.addSlider("kinectBlur", 16, 0, 32, true);
-	panel.addSlider("threshold", 66, 0, 256);
+	panel.addSlider("threshold", 200, 0, 256);
 	panel.addSlider("minAreaRadius", 30, 0, 100);
 	panel.addSlider("maxAreaRadius", 200, 0, 200);
-	panel.addSlider("minx", -65, -100, 100);
-	panel.addSlider("maxx", +45, -100, 100);
-	panel.addSlider("miny", -92, -100, 100);
-	panel.addSlider("maxy", +46, -100, 100);
+	panel.addSlider("minx", -300, -1000, 1000);
+	panel.addSlider("maxx", +100, -1000, 1000);
+	panel.addSlider("miny", -100, -1000, 1000);
+	panel.addSlider("maxy", +100, -1000, 1000	);
 	panel.addSlider("touchOffset", -.4 * sceneHeight, -sceneHeight, sceneHeight);
 	
 	sceneFbo.allocate(sceneWidth, sceneHeight);
@@ -133,7 +136,9 @@ void testApp::drawOverlay() {
 		ofVec2f curCenter = toOf(contourFinder.getCenter(i));
 		ofCircle(curCenter, 10);
 		ofVec3f cur = users[i];
+		ofVec3f curBefore = usersBefore[i];
 		drawHighlightString(ofToString(userLabels[i]) + ": " + 
+			ofToString((int) curBefore.x) + "/" + ofToString((int) curBefore.y) + "->" +
 			ofToString((int) cur.x) + "/" + ofToString((int) cur.y),
 			curCenter);
 	}
@@ -173,6 +178,7 @@ void testApp::setFade() {
 
 void testApp::findUserLocations() {	
 	users.clear();
+	usersBefore.clear();
 	userLabels.clear();
 	int w = kinect.getWidth();
 	float* distancePixels = kinect.getDistancePixels();
@@ -199,6 +205,7 @@ void testApp::findUserLocations() {
 			}
 		}
 		ofVec3f cur = ConvertProjectiveToRealWorld(sum / count);
+		usersBefore.push_back(cur);
 		cur.x = ofMap(cur.x, panel.getValueF("minx"), panel.getValueF("maxx"), 0, 1);
 		cur.y = ofMap(cur.y, panel.getValueF("miny"), panel.getValueF("maxy"), 0, 1);
 		ofVec2f curNorm(cur.x, cur.y);
@@ -239,6 +246,10 @@ void testApp::updateScene() {
 }
 	
 void testApp::update(){
+	if(panel.hasValueChanged("kinectFar") || panel.hasValueChanged("kinectNear")) {
+		kinect.setDepthClipping(panel.getValueF("kinectNear"), panel.getValueF("kinectFar"));
+	}
+
 	kinect.update();
 	if(kinect.isFrameNew()) {		
 		contourFinder.setInvert(false);
@@ -265,6 +276,8 @@ void testApp::update(){
 	rightRemap.setOffset(sceneOffset);
 	
 	updateScene();
+	
+	panel.clearAllChanged();
 }
 
 void testApp::draw() {

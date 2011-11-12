@@ -58,7 +58,7 @@ bool nextState() {
 void testApp::setup() {
 	ofSetVerticalSync(true);
 	ofHideCursor();
-	ofSetDataPathRoot("../../../../../SharedData/");
+	ofSetDataPathRoot("../../../../../SharedData/skull/");
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	camera.setup();
 	generate();

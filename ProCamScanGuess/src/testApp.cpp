@@ -63,6 +63,9 @@ void testApp::update() {
 			mesh.addColor(ofColor(colors[i]));
 		}
 		
+		cout << "rotation: " << rotation << endl;
+		cout << "translation: " << translation << endl;
+		
 		exportPlyCloud("output.ply", mesh);
 	}
 }
