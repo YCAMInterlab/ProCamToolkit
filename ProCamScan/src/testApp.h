@@ -12,14 +12,21 @@ public:
 	void decodeAndSave(string filename);
 	void keyPressed(int key);
 	
+	enum CameraMode {EASYCAM_MODE, PRO_MODE, CAM_MODE};
+	CameraMode cameraMode;
+	
 	ofImage camImage, proImage;
-	vector<Point2f> camImagePoints, proImagePoints;
-	vector<Point3f> resultPoints;
+	vector<cv::Point2f> camImagePoints, proImagePoints;
+	vector<cv::Point3f> resultPoints;
 	cv::Size proSize, camSize;
-	Mat camMatrix, proMatrix;
-	Mat camDistCoeffs, proDistCoeffs;
-	Mat rotation, translation;
+	cv::Mat camMatrix, proMatrix;
+	cv::Mat camDistCoeffs, proDistCoeffs;
+	cv::Mat rotation, translation;
 	ofEasyCam cam;
 	ofVboMesh mesh;
 	vector<unsigned char> colors;
+	
+	ofShader shader;
+	Poco::Timestamp lastFragTimestamp, lastVertTimestamp;
+	ofxCv::Intrinsics proCalibration, camCalibration;
 };

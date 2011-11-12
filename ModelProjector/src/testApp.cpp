@@ -68,6 +68,20 @@ void testApp::draw() {
 	} else {
 		drawRenderMode();
 	}
+	if(!getb("validShader")) {
+		ofPushStyle();
+		ofSetColor(magentaPrint);
+		ofSetLineWidth(8);
+		ofLine(0, 0, ofGetWidth(), ofGetHeight());
+		ofLine(ofGetWidth(), 0, 0, ofGetHeight());
+		string message = "Shader failed to compile.";
+		ofVec2f center(ofGetWidth(), ofGetHeight());
+		center /= 2;
+		center.x -= message.size() * 8 / 2;
+		center.y -= 8;
+		drawHighlightString(message, center);
+		ofPopStyle();
+	}
 }
 
 void testApp::keyPressed(int key) {
@@ -115,6 +129,13 @@ void testApp::setupMesh() {
 }
 
 void testApp::render() {
+	ofPushStyle();
+	ofSetLineWidth(geti("lineWidth"));
+	if(getb("useSmoothing")) {
+		ofEnableSmoothing();
+	} else {
+		ofDisableSmoothing();
+	}
 	int shading = geti("shading");
 	bool useLights = shading == 1;
 	bool useShader = shading == 2;
@@ -169,7 +190,8 @@ void testApp::render() {
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
 		Poco::Timestamp vertTimestamp = vertFile.getPocoFile().getLastModified();
 		if(fragTimestamp != lastFragTimestamp || vertTimestamp != lastVertTimestamp) {
-			shader.load("shader");
+			bool validShader = shader.load("shader");
+			setb("validShader", validShader);
 		}
 		lastFragTimestamp = fragTimestamp;
 		lastVertTimestamp = vertTimestamp;
@@ -203,6 +225,7 @@ void testApp::render() {
 	if(useLights) {
 		ofDisableLighting();
 	}
+	ofPopStyle();
 }
 
 void testApp::saveData() {
@@ -229,9 +252,9 @@ void testApp::setupControlPanel() {
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
-	panel.addMultiToggle("drawMode", variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
-	panel.addMultiToggle("shading", variadic("none")("lights")("shader"));
 	panel.addDrawableRect("launchpad", &launchpad, 200, 200);
+	panel.addMultiToggle("drawMode", 3, variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
+	panel.addMultiToggle("shading", 0, variadic("none")("lights")("shader"));
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
@@ -248,10 +271,12 @@ void testApp::setupControlPanel() {
 	panel.addToggle("CV_CALIB_FIX_PRINCIPAL_POINT", false);
 	
 	panel.addPanel("Rendering");
+	panel.addSlider("lineWidth", 2, 1, 8, true);
+	panel.addToggle("useSmoothing", false);
 	panel.addToggle("useFog", false);
 	panel.addSlider("fogNear", 200, 0, 1000);
 	panel.addSlider("fogFar", 1850, 0, 2500);
-	panel.addSlider("screenPointSize", 6, 1, 16, true);
+	panel.addSlider("screenPointSize", 2, 1, 16, true);
 	panel.addSlider("selectedPointSize", 8, 1, 16, true);
 	panel.addSlider("selectionRadius", 12, 1, 32);
 	panel.addSlider("lightX", 200, -1000, 1000);
@@ -260,6 +285,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("randomLighting", false);
 	
 	panel.addPanel("Internal");
+	panel.addToggle("validShader", true);
 	panel.addToggle("selectionMode", true);
 	panel.addToggle("hoverSelected", false);
 	panel.addSlider("hoverChoice", 0, 0, objectPoints.size(), true);
@@ -364,7 +390,7 @@ void testApp::drawSelectionMode() {
 	int choice;
 	float distance;
 	ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
-	if(distance < getf("selectionRadius")) {
+	if(!ofGetMousePressed() && distance < getf("selectionRadius")) {
 		seti("hoverChoice", choice);
 		setb("hoverSelected", true);
 		drawLabeledPoint(choice, selected, magentaPrint);
@@ -433,7 +459,7 @@ void testApp::drawRenderMode() {
 			// draw hover magenta
 			float distance;
 			ofVec2f selected = toOf(getClosestPoint(imagePoints, mouseX, mouseY, &choice, &distance));
-			if(referencePoints[choice] && distance < getf("selectionRadius")) {
+			if(!ofGetMousePressed() && referencePoints[choice] && distance < getf("selectionRadius")) {
 				seti("hoverChoice", choice);
 				setb("hoverSelected", true);
 				drawLabeledPoint(choice, selected, magentaPrint);
