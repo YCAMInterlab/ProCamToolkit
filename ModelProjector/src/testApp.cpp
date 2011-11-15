@@ -28,12 +28,20 @@ void testApp::setup() {
 	setupMesh();	
 	setupControlPanel();
 	launchpad.setup(1);
-	launchpad.setToggleMode(ofxLaunchpadToggle::MOMENTARY_MODE);
-	midiOut.openPort(0);
+	vector<unsigned char> notes(8);
+	for(int i = 0; i < 8; i++) {
+		notes[i] = i;
+	}
+	sequencer.setup(notes, 8, 120, 1);
 	launchpad.addListener(this);
 }
 
 void testApp::update() {
+	switch(geti("launchpadMode")) {
+		case 0: launchpad.setToggleMode(ofxLaunchpadToggle::MOMENTARY_MODE); break;
+		case 1: launchpad.setToggleMode(ofxLaunchpadToggle::TOGGLE_MODE); break;
+	}
+
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
 		setf("lightY", ofSignedNoise(1, ofGetElapsedTimef(), 1) * 1000);
@@ -151,7 +159,10 @@ void testApp::render() {
 		vector<float> highlightPositions;
 		for(int y = 0; y < 8; y++) {
 			for(int x = 0; x < 8; x++) {
-				if(launchpad.getLedGrid(x, y).isOn()) {
+				bool shouldHighlight = getb("useSequencer") ? 
+					sequencer.getMomentaryState(y, x) :
+					launchpad.getLedGrid(x, y).isOn();
+				if(shouldHighlight) {
 					float i = y * 8 + x;
 					float n = 8 * 8;
 					highlightPositions.push_back(i / n);
@@ -198,6 +209,7 @@ void testApp::render() {
 		
 		shader.begin();
 		shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+		shader.setUniform1i("stage", geti("stage"));
 		shader.end();
 	}
 	ofColor transparentBlack(0, 0, 0, 0);
@@ -245,21 +257,25 @@ void testApp::saveData() {
 }
 
 void testApp::setupControlPanel() {
-	panel.setup();
+	panel.setup(280, 800);
 	panel.msg = "tab hides the panel, space toggles render/selection mode, 'f' toggles fullscreen.";
 	
 	panel.addPanel("Interaction");
-	panel.addToggle("setupMode", true);
+	panel.addToggle("setupMode", false);
 	panel.addSlider("scale", 1, .1, 25);
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addDrawableRect("launchpad", &launchpad, 200, 200);
 	panel.addMultiToggle("drawMode", 3, variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
 	panel.addMultiToggle("shading", 0, variadic("none")("lights")("shader"));
+	panel.addSlider("stage", 0, 0, 10, true);
 	
 	panel.addPanel("Highlight");
+	panel.addToggle("useLaunchpad", true);
 	panel.addToggle("highlight", false);
 	panel.addSlider("highlightPosition", 0, 0, 1);
 	panel.addSlider("highlightOffset", .1, 0, 1);
+	panel.addMultiToggle("launchpadMode", 1, variadic("momentary")("toggle"));
+	panel.addToggle("useSequencer", true);
 	
 	panel.addPanel("Calibration");
 	panel.addSlider("aov", 80, 50, 100);
@@ -398,11 +414,11 @@ void testApp::drawSelectionMode() {
 		setb("hoverSelected", false);
 	}
 	
-	// draw selected point yellow
+	// draw selected point white
 	if(getb("selected")) {
 		int choice = geti("selectionChoice");
 		ofVec2f selected = imageMesh.getVertex(choice);
-		drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
+		drawLabeledPoint(choice, selected, ofColor::white, ofColor::white, ofColor::black);
 	}
 }
 
@@ -434,7 +450,7 @@ void testApp::drawRenderMode() {
 		}
 		
 		// move points that need to be dragged
-		// draw selected yellow
+		// draw selected white
 		int choice = geti("selectionChoice");
 		if(getb("selected")) {
 			referencePoints[choice] = true;	
@@ -451,7 +467,7 @@ void testApp::drawRenderMode() {
 			Point2f& cur = imagePoints[choice];
 			float rate = ofGetMousePressed(0) ? getf("slowLerpRate") : getf("fastLerpRate");
 			cur = Point2f(ofLerp(cur.x, mouseX, rate), ofLerp(cur.y, mouseY, rate));
-			drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
+			drawLabeledPoint(choice, toOf(cur), ofColor::white, ofColor::white, ofColor::black);
 			ofSetColor(ofColor::black);
 			ofRect(toOf(cur), 1, 1);
 		} else {
@@ -471,9 +487,17 @@ void testApp::drawRenderMode() {
 }
 
 void testApp::gridButtonPressed(int col, int row) {
-	midiOut.sendNoteOn(1, row * 8 + col, 127);
+	if(getb("useSequencer")) {
+		sequencer.setState(row, col, launchpad.getLedGrid(col, row).isOn());
+	} else {
+		sequencer.midiOut.sendNoteOn(1, row * 8 + col, 127);
+	}
 }
 
 void testApp::gridButtonReleased(int col, int row) {
-	midiOut.sendNoteOff(1, row * 8 + col, 0);
+	if(getb("useSequencer")) {
+		sequencer.setState(row, col, launchpad.getLedGrid(col, row).isOn());
+	} else {
+		sequencer.midiOut.sendNoteOff(1, row * 8 + col, 0);	
+	}
 }

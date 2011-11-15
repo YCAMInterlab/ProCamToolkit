@@ -7,6 +7,7 @@
 #include "ofxAutoControlPanel.h"
 #include "ofxLaunchpadToggle.h"
 #include "LineArt.h"
+#include "Sequencer.h"
 
 class testApp : public ofBaseApp, public ofxLaunchpadListener {
 public:
@@ -49,7 +50,7 @@ public:
 	bool calibrationReady;
 
 	ofxLaunchpadToggle launchpad;
-	ofxMidiOut midiOut;
+	Sequencer sequencer;
 	void gridButtonPressed(int col, int row);
 	void gridButtonReleased(int col, int row);
 	

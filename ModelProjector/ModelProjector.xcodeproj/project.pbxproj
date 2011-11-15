@@ -200,6 +200,7 @@
 		27E5F7C7145D5CF600A41D96 /* ofxMidiOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxMidiOut.cpp; path = ../../../addons/ofxMidi/src/ofxMidiOut.cpp; sourceTree = SOURCE_ROOT; };
 		27E5F7C8145D5CF600A41D96 /* ofxMidiOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxMidiOut.h; path = ../../../addons/ofxMidi/src/ofxMidiOut.h; sourceTree = SOURCE_ROOT; };
 		27E5F898145D5D2900A41D96 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = /System/Library/Frameworks/CoreMIDI.framework; sourceTree = "<absolute>"; };
+		27E8C122146E60D600ED37F2 /* Sequencer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sequencer.h; path = src/Sequencer.h; sourceTree = SOURCE_ROOT; };
 		27EC37E3146BB30B00B1CEB6 /* LineArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineArt.h; path = /Users/kyle/Documents/openFrameworks/apps/Ycam/SharedCode/LineArt.h; sourceTree = "<absolute>"; };
 		27EC37EA146BB35B00B1CEB6 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .gitignore; path = ../../../addons/ofxCv/libs/.gitignore; sourceTree = SOURCE_ROOT; };
 		27EC37EE146BB35B00B1CEB6 /* Calibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Calibration.h; path = ../../../addons/ofxCv/libs/ofxCv/include/ofxCv/Calibration.h; sourceTree = SOURCE_ROOT; };
@@ -946,6 +947,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				27E8C122146E60D600ED37F2 /* Sequencer.h */,
 				27053021143F29C60067A76B /* SharedCode */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
