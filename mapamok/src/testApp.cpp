@@ -23,6 +23,7 @@ float testApp::getf(string name) {
 }
 
 void testApp::setup() {
+	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	ofSetVerticalSync(true);
 	calibrationReady = false;
 	setupMesh();	
@@ -318,6 +319,7 @@ void testApp::updateRenderMode() {
 void testApp::drawLabeledPoint(int label, ofVec2f position, ofColor color, ofColor bg, ofColor fg) {
 	glPushAttrib(GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	ofVec2f tooltipOffset(5, -25);
 	ofSetColor(color);
 	float w = ofGetWidth();
@@ -342,7 +344,7 @@ void testApp::drawSelectionMode() {
 	if(getb("useFog")) {
 		disableFog();
 	}
-	imageMesh = getProjectedMesh(objectMesh);	
+	imageMesh = getProjectedMesh(objectMesh);
 	cam.end();
 	
 	// draw all points cyan small
