@@ -30,6 +30,7 @@ void testApp::setup() {
 }
 
 void testApp::update() {
+	ofSetWindowTitle("mapamok");
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
 		setf("lightY", ofSignedNoise(1, ofGetElapsedTimef(), 1) * 1000);
@@ -265,7 +266,7 @@ void testApp::setupControlPanel() {
 	panel.addToggle("dragging", false);
 	panel.addSlider("selectionChoice", 0, 0, objectPoints.size(), true);
 	panel.addSlider("slowLerpRate", .001, 0, .01);
-	panel.addSlider("fastLerpRate", .05, 0, .1);
+	panel.addSlider("fastLerpRate", 1, 0, 1);
 }
 
 void testApp::updateRenderMode() {
@@ -321,6 +322,7 @@ void testApp::drawLabeledPoint(int label, ofVec2f position, ofColor color, ofCol
 	ofSetColor(color);
 	float w = ofGetWidth();
 	float h = ofGetHeight();
+	ofSetLineWidth(1.5);
 	ofLine(position - ofVec2f(w,0), position + ofVec2f(w,0));
 	ofLine(position - ofVec2f(0,h), position + ofVec2f(0,h));
 	ofCircle(position, geti("selectedPointSize"));

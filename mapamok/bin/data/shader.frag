@@ -10,7 +10,7 @@ const vec4 off = vec4(vec3(0.), 1.);
 
 void main() {
 	float stages = 6.;
-	float stage = 5.;mod(elapsedTime * .6, stages);
+	float stage = 2.;mod(elapsedTime * .6, stages);
 	if(stage < 1.) {
 		// diagonal stripes
 		const float speed = 50.;
@@ -24,8 +24,8 @@ void main() {
 	} else if(stage < 3.) {
 		// fast rising stripes
 		if(normal.z == 0.) {
-			const float speed = 60.;
-			const float scale = 30.;
+			const float speed = 10.;
+			const float scale = 10.;
 			gl_FragColor = 
 				(mod((-position.z) + (elapsedTime * speed), scale) < 1.) ?
 				on : off;
