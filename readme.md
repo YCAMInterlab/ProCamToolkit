@@ -1,6 +1,8 @@
-ProCamToolkit is a collection software and code for [openFrameworks](http://openframeworks.cc/) aimed at making high level projector-camera calibration more accessible.
+ProCamToolkit is a collection software and code for [openFrameworks](http://openframeworks.cc/) aimed at making high level projector-camera calibration more accessible. It provides examples manual projector calibration using a model of a scene, projector-camera calibration using a reference pattern and gray code scanning, and multi-projector calibration using gray code scanning. A program called "mapamok" has emerged from ProCamToolkit as the most user-friendly app of the collection, and it's useful for experimenting with extremely fast projection mapping in situations where the scene can be modeled quickly (e.g., a collection of cuboids) or where the scene is modeled in advance (e.g., a 3D print, or a manufactured object like a car). Most of ProCamToolkit is written in an extremely modular way, making it possible to borrow snippets of code, including some chunks that are written with the goal of being contributed to the openFrameworks core.
 
-The ProCamToolkit also includes work in progress towards new installations being developed during my residency.
+ProCamToolkit also includes work in progress towards new installations being developed during Guest Research Projector v.1 at [YCAM Interlab](http://interlab.ycam.jp/en/). This includes experiments with augmented shadows using multiple projectors, and projection mapping in the YCAM library.
+
+ProCamToolkit is available under the [MIT License](https://secure.wikimedia.org/wikipedia/en/wiki/Mit_license).
 
 # Apps
 
@@ -36,7 +38,7 @@ Demonstrates how screen-space model selection is implemented for the ModelProjec
 
 ### RecursiveAverageExample
 
-Recursively averages all the images in a folder. Useful fro extracting gray images from a sequence of gray code scans.
+Recursively averages all the images in a folder. Useful for extracting gray images from a sequence of gray code scans.
 
 # Other
 
