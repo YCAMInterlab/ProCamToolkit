@@ -6,6 +6,10 @@ The ProCamToolkit also includes work in progress towards new installations being
 
 ## Geometry
 
+### mapamok
+
+This is a complex app that will allow you to load a COLLADA file called `model.dae`, and then specify some number of points between the model and the corresponding location in the projection. After enough points have been selected, it will solve for the projector location and set the OpenGL viewport to render with the same intrinsics as the projector. For more details about mapamok, see [the wiki](https://github.com/YCAMInterlab/ProCamToolkit/wiki).
+
 ### ProCamSampleEdsdk and ProCamSampleLibdc
 
 This app is the first step in capturing the data to calibrate a projector-camera system. It will project and capture gray code patterns. If you are scanning a scene, you only need to do this once. If you are calibrating before scanning a scene, you will need to take one scan per detected pattern.
@@ -13,10 +17,6 @@ This app is the first step in capturing the data to calibrate a projector-camera
 ### CameraCalibrate
 
 This app will calibrate a camera from a sequence of images stored on disk, and save the calibration information into a `.yml` file.
-
-### ModelProjector
-
-This is a fairly complex app that will allow you to load a Collada file `model.dae`, and then specify some number of points between the model and the corresponding location in the projection. After enough points have been selected, it will solve for the projector location and set the OpenGL viewport to render with the same intrinsics as the projector.
 
 ## Color
 
