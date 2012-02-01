@@ -10,6 +10,8 @@ ProCamToolkit is available under the [MIT License](https://secure.wikimedia.org/
 
 ### mapamok
 
+<iframe src="http://player.vimeo.com/video/35939205?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
 This is a complex app that will allow you to load a COLLADA file called `model.dae`, and then specify some number of points between the model and the corresponding location in the projection. After enough points have been selected, it will solve for the projector location and set the OpenGL viewport to render with the same intrinsics as the projector. For more details about mapamok, see [the wiki](https://github.com/YCAMInterlab/ProCamToolkit/wiki).
 
 ### ProCamSampleEdsdk and ProCamSampleLibdc
@@ -19,6 +21,18 @@ This app is the first step in capturing the data to calibrate a projector-camera
 ### CameraCalibrate
 
 This app will calibrate a camera from a sequence of images stored on disk, and save the calibration information into a `.yml` file.
+
+### ShadowCast
+
+<iframe src="http://player.vimeo.com/video/35992437?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+ShadowCast is work in progress on an installation that explores augmented shadows using multiple projectors.
+
+### ProCamScan
+
+<iframe src="http://player.vimeo.com/video/34272491?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+Decodes scan data and projection maps onto the point cloud.
 
 ## Color
 
