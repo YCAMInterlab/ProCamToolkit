@@ -54,4 +54,4 @@ Demonstrates all of the scenes inside `SharedCode/scenes/`.
 
 - - --
 
-*ProCamToolkit is codeveloped by [Yamaguchi Center for Arts and Media](http://ycam.jp/).*
+*ProCamToolkit is codeveloped by [YCAM Interlab](http://interlab.ycam.jp/en/).*
