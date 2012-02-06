@@ -12,19 +12,21 @@ ProCamToolkit is available under the [MIT License](https://secure.wikimedia.org/
 
 This is a complex app that will allow you to load a COLLADA file called `model.dae`, and then specify some number of points between the model and the corresponding location in the projection. After enough points have been selected, it will solve for the projector location and set the OpenGL viewport to render with the same intrinsics as the projector. For more details about mapamok, see [the wiki](https://github.com/YCAMInterlab/ProCamToolkit/wiki).
 
+### ProCamSampleEdsdk and ProCamSampleLibdc
+
+This app is the first step in capturing the data to calibrate a projector-camera system. It will project and capture gray code patterns. If you are scanning a scene, you only need to do this once. If you are calibrating before scanning a scene, you will need to take one scan per detected pattern.
+
+ProCamSampleEdsdk works with a Canon DSLR, while ProCamSampleLibdc works with a Firewire camera. After compiling the app you want to use, run the app, hit `f` to fullscreen on the projector, then the space bar to start capturing. Before you start capturing, make sure the camera is not clipping on the brights or darks. In order to capture calibration data from two projectors, change `totalProjectors` from `1` to `2`.
+
 ### CameraCalibrate
 
 This app will calibrate a camera from a sequence of images stored on disk, and save the calibration information into a `.yml` file. To use the application, load a sequence of images into the `data/images/` directory. Then edit the `data/settings.yml` file to reflect the calibration pattern.
 
 In the `settings.xml` file, `xCount` and `yCount` refer to the number of circles or corners in the calibration pattern. `squareSize` describes the spacing between the circles or corners.  Because calibration is unitless,`squareSize` can be in whatever units you want the calibration data to be reported as (normally, millimeters). `patternSize` is `0`, `1`, or `2`, which means `CHESSBOARD`, `CIRCLES_GRID` and `ASYMMETRIC_CIRCLES_GRID`.
 
-### ProCamSampleEdsdk and ProCamSampleLibdc
-
-This app is the first step in capturing the data to calibrate a projector-camera system. It will project and capture gray code patterns. If you are scanning a scene, you only need to do this once. If you are calibrating before scanning a scene, you will need to take one scan per detected pattern.
-
 ### ShadowCast
 
-ShadowCast is work in progress on an installation that explores augmented shadows using multiple projectors.
+ShadowCast is work in progress on an installation that explores augmented shadows using multiple projectors. To work properly, it requires two projectors that have been calibrated to a single camera. This calibration information is captured with ProCamSampleEdsdk or ProCamSampleLibdc, then processed by ProjectorGeometryCalibrate, and finally loaded from `.exr` displacement maps in the `SharedData/` folder. To explore the scenes inside `ShadowCast` without calibrating a pair of projectors, run the `Scenes` project.
 
 ### ProCamScan
 
