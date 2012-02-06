@@ -10,27 +10,23 @@ ProCamToolkit is available under the [MIT License](https://secure.wikimedia.org/
 
 ### mapamok
 
-<object width="500" height="281"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=35939205&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=35939205&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="500" height="281"></embed></object>
-
 This is a complex app that will allow you to load a COLLADA file called `model.dae`, and then specify some number of points between the model and the corresponding location in the projection. After enough points have been selected, it will solve for the projector location and set the OpenGL viewport to render with the same intrinsics as the projector. For more details about mapamok, see [the wiki](https://github.com/YCAMInterlab/ProCamToolkit/wiki).
+
+### CameraCalibrate
+
+This app will calibrate a camera from a sequence of images stored on disk, and save the calibration information into a `.yml` file. To use the application, load a sequence of images into the `data/images/` directory. Then edit the `data/settings.yml` file to reflect the calibration pattern.
+
+In the `settings.xml` file, `xCount` and `yCount` refer to the number of circles or corners in the calibration pattern. `squareSize` describes the spacing between the circles or corners.  Because calibration is unitless,`squareSize` can be in whatever units you want the calibration data to be reported as (normally, millimeters). `patternSize` is `0`, `1`, or `2`, which means `CHESSBOARD`, `CIRCLES_GRID` and `ASYMMETRIC_CIRCLES_GRID`.
 
 ### ProCamSampleEdsdk and ProCamSampleLibdc
 
 This app is the first step in capturing the data to calibrate a projector-camera system. It will project and capture gray code patterns. If you are scanning a scene, you only need to do this once. If you are calibrating before scanning a scene, you will need to take one scan per detected pattern.
 
-### CameraCalibrate
-
-This app will calibrate a camera from a sequence of images stored on disk, and save the calibration information into a `.yml` file.
-
 ### ShadowCast
-
-<iframe src="http://player.vimeo.com/video/35992437?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 
 ShadowCast is work in progress on an installation that explores augmented shadows using multiple projectors.
 
 ### ProCamScan
-
-<iframe src="http://player.vimeo.com/video/34272491?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 
 Decodes scan data and projection maps onto the point cloud.
 
