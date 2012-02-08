@@ -66,6 +66,14 @@ Camera calibration and gamma calibration information shared between apps is save
 
 Demonstrates all of the scenes inside `SharedCode/scenes/`.
 
+# Undocumented
+
+### ProCamCalibrate
+### ProCamDecode*
+### ProCamScanGuess
+### RecursiveAverageExample
+### ProjectorGeometryCalibrate
+
 - - --
 
 *ProCamToolkit is codeveloped by [YCAM Interlab](http://interlab.ycam.jp/en/).*
