@@ -34,7 +34,8 @@ public:
 	
 	ofxAssimpModelLoader model;	
 	ofEasyCam cam;
-	ofMesh objectMesh, imageMesh;
+	ofVboMesh objectMesh;
+	ofMesh imageMesh;
 	ofLight light;
 	ofxAutoControlPanel panel;
 	

@@ -144,8 +144,8 @@ void testApp::render() {
 		glEnable(GL_NORMALIZE);
 	}
 	
-	objectMesh.clearColors();
 	if(getb("highlight")) {
+		objectMesh.clearColors();
 		int n = objectMesh.getNumVertices();
 		float highlightPosition = getf("highlightPosition");
 		float highlightOffset = getf("highlightOffset");
@@ -208,12 +208,19 @@ void testApp::saveData() {
 	ofDirectory dir(dirName);
 	dir.create();
 	
-	FileStorage fs(ofToDataPath(dirName + "intrinsics.yml"), FileStorage::WRITE);
+	FileStorage fs(ofToDataPath(dirName + "calibration.yml"), FileStorage::WRITE);
 	cv::Size imageSize = intrinsics.getImageSize();
 	Mat cameraMatrix = intrinsics.getCameraMatrix();
+	double focalLength = intrinsics.getFocalLength();
+	Point2d fov = intrinsics.getFov();
+	Point2d principalPoint = intrinsics.getPrincipalPoint();
 	fs << "cameraMatrix" << cameraMatrix;
-	fs << "imageSize_width" << imageSize.width;
-	fs << "imageSize_height" << imageSize.height;
+	fs << "focalLength" << focalLength;
+	fs << "fov" << fov;
+	fs << "principalPoint" << principalPoint;
+	fs << "rvec" << rvec;
+	fs << "tvec" << tvec;
+	fs << "imageSize" << imageSize;
 	
 	saveMat(Mat(objectPoints), dirName + "objectPoints.yml");
 	saveMat(Mat(imagePoints), dirName + "imagePoints.yml");
@@ -344,41 +351,45 @@ void testApp::drawSelectionMode() {
 	if(getb("useFog")) {
 		disableFog();
 	}
-	imageMesh = getProjectedMesh(objectMesh);
+	if(getb("setupMode")) {
+		imageMesh = getProjectedMesh(objectMesh);
+	}
 	cam.end();
 	
-	// draw all points cyan small
-	glPointSize(geti("screenPointSize"));
-	glEnable(GL_POINT_SMOOTH);
-	ofSetColor(cyanPrint);
-	imageMesh.drawVertices();
+	if(getb("setupMode")) {
+		// draw all points cyan small
+		glPointSize(geti("screenPointSize"));
+		glEnable(GL_POINT_SMOOTH);
+		ofSetColor(cyanPrint);
+		imageMesh.drawVertices();
 
-	// draw all reference points cyan
-	int n = referencePoints.size();
-	for(int i = 0; i < n; i++) {
-		if(referencePoints[i]) {
-			drawLabeledPoint(i, imageMesh.getVertex(i), cyanPrint);
+		// draw all reference points cyan
+		int n = referencePoints.size();
+		for(int i = 0; i < n; i++) {
+			if(referencePoints[i]) {
+				drawLabeledPoint(i, imageMesh.getVertex(i), cyanPrint);
+			}
 		}
-	}
-	
-	// check to see if anything is selected
-	// draw hover point magenta
-	int choice;
-	float distance;
-	ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
-	if(!ofGetMousePressed() && distance < getf("selectionRadius")) {
-		seti("hoverChoice", choice);
-		setb("hoverSelected", true);
-		drawLabeledPoint(choice, selected, magentaPrint);
-	} else {
-		setb("hoverSelected", false);
-	}
-	
-	// draw selected point yellow
-	if(getb("selected")) {
-		int choice = geti("selectionChoice");
-		ofVec2f selected = imageMesh.getVertex(choice);
-		drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
+		
+		// check to see if anything is selected
+		// draw hover point magenta
+		int choice;
+		float distance;
+		ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
+		if(!ofGetMousePressed() && distance < getf("selectionRadius")) {
+			seti("hoverChoice", choice);
+			setb("hoverSelected", true);
+			drawLabeledPoint(choice, selected, magentaPrint);
+		} else {
+			setb("hoverSelected", false);
+		}
+		
+		// draw selected point yellow
+		if(getb("selected")) {
+			int choice = geti("selectionChoice");
+			ofVec2f selected = imageMesh.getVertex(choice);
+			drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
+		}
 	}
 }
 
@@ -392,7 +403,9 @@ void testApp::drawRenderMode() {
 		intrinsics.loadProjectionMatrix(10, 2000);
 		applyMatrix(modelMatrix);
 		render();
-		imageMesh = getProjectedMesh(objectMesh);	
+		if(getb("setupMode")) {
+			imageMesh = getProjectedMesh(objectMesh);	
+		}
 	}
 	
 	glPopMatrix();
