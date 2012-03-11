@@ -438,11 +438,11 @@ ofVec3f ofScreenToWorld(ofVec3f screen) {
 }
 
 ofMesh getProjectedMesh(const ofMesh& mesh) {
-	ofMesh projected;
+	ofMesh projected = mesh;
 	for(int i = 0; i < mesh.getNumVertices(); i++) {
 		ofVec3f cur = ofWorldToScreen(mesh.getVerticesPointer()[i]);
 		cur.z = 0;
-		projected.addVertex(cur);
+		projected.setVertex(i, cur);
 	}
 	return projected;
 }
