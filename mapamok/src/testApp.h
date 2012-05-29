@@ -30,7 +30,7 @@ public:
 	void drawSelectionMode();
 	void drawRenderMode();
 	void render();
-	void saveData();
+	void saveCalibration();
 	
 	ofxAssimpModelLoader model;	
 	ofEasyCam cam;

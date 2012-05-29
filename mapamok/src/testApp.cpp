@@ -61,6 +61,10 @@ void disableFog() {
 
 void testApp::draw() {
 	ofBackground(geti("backgroundColor"));
+	if(getb("saveCalibration")) {
+		saveCalibration();
+		setb("saveCalibration", false);
+	}
 	if(getb("selectionMode")) {
 		drawSelectionMode();
 	} else {
@@ -96,9 +100,6 @@ void testApp::keyPressed(int key) {
 	}
 	if(key == ' ') { // toggle render/select mode
 		setb("selectionMode", !getb("selectionMode"));
-	}
-	if(key == 's') { // save calibration data
-		saveData();
 	}
 }
 
@@ -203,24 +204,71 @@ void testApp::render() {
 	ofPopStyle();
 }
 
-void testApp::saveData() {
+void testApp::saveCalibration() {
 	string dirName = "calibration-" + ofGetTimestampString() + "/";
 	ofDirectory dir(dirName);
 	dir.create();
 	
-	FileStorage fs(ofToDataPath(dirName + "calibration.yml"), FileStorage::WRITE);
-	cv::Size imageSize = intrinsics.getImageSize();
+	FileStorage fs(ofToDataPath(dirName + "calibration-advanced.yml"), FileStorage::WRITE);	
+	
 	Mat cameraMatrix = intrinsics.getCameraMatrix();
-	double focalLength = intrinsics.getFocalLength();
-	Point2d fov = intrinsics.getFov();
-	Point2d principalPoint = intrinsics.getPrincipalPoint();
 	fs << "cameraMatrix" << cameraMatrix;
+	
+	double focalLength = intrinsics.getFocalLength();
 	fs << "focalLength" << focalLength;
+	
+	Point2d fov = intrinsics.getFov();
 	fs << "fov" << fov;
+	
+	Point2d principalPoint = intrinsics.getPrincipalPoint();
 	fs << "principalPoint" << principalPoint;
-	fs << "rvec" << rvec;
-	fs << "tvec" << tvec;
+	
+	cv::Size imageSize = intrinsics.getImageSize();
 	fs << "imageSize" << imageSize;
+	
+	fs << "translationVector" << tvec;
+	fs << "rotationVector" << rvec;
+
+	Mat rotationMatrix;
+	Rodrigues(rvec, rotationMatrix);
+	fs << "rotationMatrix" << rotationMatrix;
+	
+	double rotationAngleRadians = norm(rvec, NORM_L2);
+	double rotationAngleDegrees = ofRadToDeg(rotationAngleRadians);
+	Mat rotationAxis = rvec / rotationAngleRadians;
+	fs << "rotationAngleRadians" << rotationAngleRadians;
+	fs << "rotationAngleDegrees" << rotationAngleDegrees;
+	fs << "rotationAxis" << rotationAxis;
+	
+	ofVec3f axis(rotationAxis.at<double>(0), rotationAxis.at<double>(1), rotationAxis.at<double>(2));
+	ofVec3f euler = ofQuaternion(rotationAngleDegrees, axis).getEuler();
+	Mat eulerMat = (Mat_<double>(3,1) << euler.x, euler.y, euler.z);
+	fs << "euler" << eulerMat;
+	
+	ofFile basic("calibration-basic.log", ofFile::WriteOnly);
+	ofVec3f position( tvec.at<double>(1), tvec.at<double>(2));
+	basic << "position (in world units):" << endl;
+	basic << "\tx: " << ofToString(tvec.at<double>(0), 2) << endl;
+	basic << "\ty: " << ofToString(tvec.at<double>(1), 2) << endl;
+	basic << "\tz: " << ofToString(tvec.at<double>(2), 2) << endl;
+	basic << "axis-angle rotation (in degrees):" << endl;
+	basic << "\taxis x: " << ofToString(axis.x, 2) << endl;
+	basic << "\taxis y: " << ofToString(axis.y, 2) << endl;
+	basic << "\taxis z: " << ofToString(axis.z, 2) << endl;
+	basic << "\angle: " << ofToString(rotationAngleDegrees, 2) << endl;
+	basic << "euler rotation (in degrees):" << endl;
+	basic << "\tx: " << ofToString(euler.x, 2) << endl;
+	basic << "\ty: " << ofToString(euler.y, 2) << endl;
+	basic << "\tz: " << ofToString(euler.z, 2) << endl;
+	basic << "fov (in degrees):" << endl;
+	basic << "\thorizontal: " << ofToString(fov.x, 2) << endl;
+	basic << "\tvertical: " << ofToString(fov.y, 2) << endl;
+	basic << "principal point (in screen units):" << endl;
+	basic << "\tx: " << ofToString(principalPoint.x, 2) << endl;
+	basic << "\ty: " << ofToString(principalPoint.y, 2) << endl;
+	basic << "'image size (in pixels):" << endl;
+	basic << "\tx: " << ofToString(principalPoint.x, 2) << endl;
+	basic << "\ty: " << ofToString(principalPoint.y, 2) << endl;
 	
 	saveMat(Mat(objectPoints), dirName + "objectPoints.yml");
 	saveMat(Mat(imagePoints), dirName + "imagePoints.yml");
@@ -236,6 +284,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("backgroundColor", 0, 0, 255, true);
 	panel.addMultiToggle("drawMode", 3, variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe"));
 	panel.addMultiToggle("shading", 0, variadic("none")("lights")("shader"));
+	panel.addToggle("saveCalibration", false);
 	
 	panel.addPanel("Highlight");
 	panel.addToggle("highlight", false);
