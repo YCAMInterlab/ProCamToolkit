@@ -245,7 +245,7 @@ void testApp::saveCalibration() {
 	Mat eulerMat = (Mat_<double>(3,1) << euler.x, euler.y, euler.z);
 	fs << "euler" << eulerMat;
 	
-	ofFile basic("calibration-basic.log", ofFile::WriteOnly);
+	ofFile basic("calibration-basic.txt", ofFile::WriteOnly);
 	ofVec3f position( tvec.at<double>(1), tvec.at<double>(2));
 	basic << "position (in world units):" << endl;
 	basic << "\tx: " << ofToString(tvec.at<double>(0), 2) << endl;
@@ -255,7 +255,7 @@ void testApp::saveCalibration() {
 	basic << "\taxis x: " << ofToString(axis.x, 2) << endl;
 	basic << "\taxis y: " << ofToString(axis.y, 2) << endl;
 	basic << "\taxis z: " << ofToString(axis.z, 2) << endl;
-	basic << "\angle: " << ofToString(rotationAngleDegrees, 2) << endl;
+	basic << "\tangle: " << ofToString(rotationAngleDegrees, 2) << endl;
 	basic << "euler rotation (in degrees):" << endl;
 	basic << "\tx: " << ofToString(euler.x, 2) << endl;
 	basic << "\ty: " << ofToString(euler.y, 2) << endl;
@@ -266,7 +266,7 @@ void testApp::saveCalibration() {
 	basic << "principal point (in screen units):" << endl;
 	basic << "\tx: " << ofToString(principalPoint.x, 2) << endl;
 	basic << "\ty: " << ofToString(principalPoint.y, 2) << endl;
-	basic << "'image size (in pixels):" << endl;
+	basic << "image size (in pixels):" << endl;
 	basic << "\tx: " << ofToString(principalPoint.x, 2) << endl;
 	basic << "\ty: " << ofToString(principalPoint.y, 2) << endl;
 	
