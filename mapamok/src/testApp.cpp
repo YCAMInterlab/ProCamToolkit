@@ -40,8 +40,10 @@ void testApp::update() {
 	light.setPosition(getf("lightX"), getf("lightY"), getf("lightZ"));
 		
 	if(getb("selectionMode")) {
+		cam.enableMouseInput();
 	} else {
 		updateRenderMode();
+		cam.disableMouseInput();
 	}
 }
 
@@ -87,6 +89,21 @@ void testApp::draw() {
 }
 
 void testApp::keyPressed(int key) {
+	if(key == OF_KEY_LEFT || key == OF_KEY_UP || key == OF_KEY_RIGHT|| key == OF_KEY_DOWN){
+		int choice = geti("selectionChoice");
+		setb("arrowing", true);
+		if(choice > 0){
+			Point2f& cur = imagePoints[choice];
+			switch(key) {
+				case OF_KEY_LEFT: cur.x -= 1; break;
+				case OF_KEY_RIGHT: cur.x += 1; break;
+				case OF_KEY_UP: cur.y -= 1; break;
+				case OF_KEY_DOWN: cur.y += 1; break;
+			}
+		}
+	} else {
+		setb("arrowing",false);
+	}
 	if(key == OF_KEY_BACKSPACE) { // delete selected
 		if(getb("selected")) {
 			setb("selected", false);
@@ -321,6 +338,7 @@ void testApp::setupControlPanel() {
 	panel.addSlider("hoverChoice", 0, 0, objectPoints.size(), true);
 	panel.addToggle("selected", false);
 	panel.addToggle("dragging", false);
+	panel.addToggle("arrowing", false);
 	panel.addSlider("selectionChoice", 0, 0, objectPoints.size(), true);
 	panel.addSlider("slowLerpRate", .001, 0, .01);
 	panel.addSlider("fastLerpRate", 1, 0, 1);
@@ -492,7 +510,12 @@ void testApp::drawRenderMode() {
 			drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
 			ofSetColor(ofColor::black);
 			ofRect(toOf(cur), 1, 1);
-		} else {
+		} else if(getb("arrowing")) {
+			Point2f& cur = imagePoints[choice];
+			drawLabeledPoint(choice, toOf(cur), yellowPrint, ofColor::white, ofColor::black);
+			ofSetColor(ofColor::black);
+			ofRect(toOf(cur), 1, 1);
+        } else {
 			// check to see if anything is selected
 			// draw hover magenta
 			float distance;
