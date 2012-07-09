@@ -45,14 +45,14 @@ void testApp::update() {
 	}
 }
 
-void enableFog(float near, float far) {
+void enableFog(float nearFog, float farFog) {
 	glEnable(GL_FOG);
 	glFogi(GL_FOG_MODE, GL_LINEAR);
 	GLfloat fogColor[4]= {0, 0, 0, 1};
 	glFogfv(GL_FOG_COLOR, fogColor);
 	glHint(GL_FOG_HINT, GL_FASTEST);
-	glFogf(GL_FOG_START, near);
-	glFogf(GL_FOG_END, far);
+	glFogf(GL_FOG_START, nearFog);
+	glFogf(GL_FOG_END, farFog);
 }
 
 void disableFog() {
