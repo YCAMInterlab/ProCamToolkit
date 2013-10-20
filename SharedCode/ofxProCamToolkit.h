@@ -19,8 +19,8 @@ void applyRemap(cv::Mat& remap, cv::Mat& input, cv::Mat& output, int width, int 
 // you have to handle allocation
 template <class C, class P>
 void getProCamImages(string path, C& cam, P& pro, int width, int height, GrayCodeMode mode) {
-	cv::Mat camMat = toCv(cam);
-	cv::Mat proMat = toCv(pro);
+	cv::Mat camMat = ofxCv::toCv(cam);
+	cv::Mat proMat = ofxCv::toCv(pro);
 	getProCamImages(path, camMat, proMat, width, height, mode);
 }
 

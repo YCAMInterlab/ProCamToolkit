@@ -420,7 +420,6 @@ void updateProjectionState() {
 }
 
 ofVec3f ofWorldToScreen(ofVec3f world) {
-	updateProjectionState();
 	GLdouble x, y, z;
 	gluProject(world.x, world.y, world.z, modelviewMatrix, projectionMatrix, viewport, &x, &y, &z);
 	ofVec3f screen(x, y, z);
@@ -429,7 +428,6 @@ ofVec3f ofWorldToScreen(ofVec3f world) {
 }
 
 ofVec3f ofScreenToWorld(ofVec3f screen) {
-	updateProjectionState();
 	GLdouble x, y, z;
 	screen.y = ofGetHeight() - screen.y;
 	gluUnProject(screen.x, screen.y, screen.z, modelviewMatrix, projectionMatrix, viewport, &x, &y, &z);
@@ -439,6 +437,7 @@ ofVec3f ofScreenToWorld(ofVec3f screen) {
 
 ofMesh getProjectedMesh(const ofMesh& mesh) {
 	ofMesh projected = mesh;
+	updateProjectionState();
 	for(int i = 0; i < mesh.getNumVertices(); i++) {
 		ofVec3f cur = ofWorldToScreen(mesh.getVerticesPointer()[i]);
 		cur.z = 0;

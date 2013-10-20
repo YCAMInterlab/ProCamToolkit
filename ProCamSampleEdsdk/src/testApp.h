@@ -11,8 +11,8 @@ public:
 	void draw();
 	void keyPressed(int key);
 	
-	const static int tw = 1024;
-	const static int th = 768;
+	const static int tw = 512 * 3;
+	const static int th = 256;
 	
 	ofxEdsdk::Camera camera;
 };
