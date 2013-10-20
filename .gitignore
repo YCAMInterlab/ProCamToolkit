@@ -1,12 +1,22 @@
+# xcode
 *.depend
 *.layout
 *.mode*v3
 *.pbxuser
 *.app*
-*.DS_*
+*.DS_Store
+*.xcworkspacedata
 
+# vs2010
+*.opensdf
+*.sdf
+*.suo
+*.ipch
+
+# other
 .svn/
 obj/
 bin/
+vs2010/
 build/
 !data/

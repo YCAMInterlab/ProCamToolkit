@@ -30,6 +30,7 @@ public:
 	void drawSelectionMode();
 	void drawRenderMode();
 	void render();
+    void loadCalibration();
 	void saveCalibration();
 	
 	ofxAssimpModelLoader model;	
